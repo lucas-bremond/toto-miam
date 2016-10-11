@@ -4,20 +4,18 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/Task.hpp
+///	@file 						TotoMiam/CalendarDate.hpp
 ///	@author 					Lucas Bremond <lucas@axelspace.com>
 ///	@date 						9 Oct 2016
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Task_HPP_INCLUDED__
-#define __TotoMiam_Task_HPP_INCLUDED__
+#ifndef __TotoMiam_CalendarDate_HPP_INCLUDED__
+#define __TotoMiam_CalendarDate_HPP_INCLUDED__
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
-
-#include <TotoMiam/Time.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,46 +24,45 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Task
+class Time ;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class CalendarDate
 {
 
 	public:
 
-		enum class Status
-		{
+								CalendarDate 								( ) ;
 
-			Undefined,
-			Pending,
-			Executing,
-			Completed,
-			Failed
-
-		} ;
-
-								Task 										( ) ;
-
-								Task 										( 	const 	uint&						anId,
-																				const 	Time&						anExecutionTime						) ;
+		bool					operator ==									(	const 	CalendarDate&				aCalendarDate 						) const ;
+		bool					operator !=									(	const 	CalendarDate&				aCalendarDate 						) const ;
 
 		bool					isDefined									( ) const ;
 
-		uint					getId										( ) const ;
-		Task::Status 			getStatus									( ) const ;
-		Time 					getExecutionTime							( ) const ;
+		int16_t					getYear										( ) const ;
+		int8_t					getMonth									( ) const ;
+		int8_t					getDay										( ) const ;
+		
+		int8_t					getHours									( ) const ;
+		int8_t					getMinutes									( ) const ;
+		int8_t					getSeconds									( ) const ;
 
-		void					setStatus									(	const 	Task::Status&				aStatus								) ;
+		String					getString									( ) const ;
 
-		void					execute										( ) ;
+		static CalendarDate 	Undefined									( ) ;
 
-		static Task 			Undefined									( ) ;
-
-		static String			getStringOfStatus							(	const 	Task::Status&				aStatus								) ;
+		static CalendarDate 	Time										(	const 	TotoMiam::Time&				aTime 								) ;
 
 	private:
 
-		uint					id_ ;
-		Task::Status			status_ ;
-		Time 					executionTime_ ;
+		int16_t					year_ ;
+		int8_t					month_ ;
+		int8_t					day_ ;
+
+		int8_t					hours_ ;
+		int8_t					minutes_ ;
+		int8_t					seconds_ ;
 
 } ;
 

@@ -173,6 +173,8 @@ void							Application::onClockSet						( )
 	{
 
 		serverManager_.associateTaskManager(taskManager_) ;
+
+		taskManager_.associateApplicationStorage(applicationStorage_) ;
 		
 		taskManager_.start() ;
 
@@ -195,6 +197,8 @@ void							init										( )
 
 	// ets_intr_lock(15); // all intruptt off
 	// ets_wdt_disable() ;
+
+	// http://community.blynk.cc/t/solved-esp8266-nodemcu-v1-0-and-wdt-resets/7047/12
 
 	// File system setup
 

@@ -54,6 +54,9 @@ class ServerManager
 		void					onCurrentTime								(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 
+		void					onRule										(			HttpRequest&				aRequest,
+																						HttpResponse&				aResponse							) ;
+
 		void					onTask										(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 

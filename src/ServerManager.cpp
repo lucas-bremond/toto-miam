@@ -57,6 +57,7 @@ void							ServerManager::start						( )
 
 		serverPtr_->addPath("/status", HttpPathDelegate(&ServerManager::onStatus, this)) ;
 		serverPtr_->addPath("/current_time", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
+		serverPtr_->addPath("/rule", HttpPathDelegate(&ServerManager::onRule, this)) ;
 		serverPtr_->addPath("/task", HttpPathDelegate(&ServerManager::onTask, this)) ;
 
 		Serial.println(WifiStation.getIP()) ;
@@ -127,6 +128,143 @@ void							ServerManager::onCurrentTime				(			HttpRequest&				aRequest,
 		JSONObject["time"]														=		(String)Time::Now().getString() ;
 
 		aResponse.sendJsonObject(JSONStream) ;
+
+	} else {
+
+		aResponse.badRequest() ;
+
+	}
+
+}
+
+void							ServerManager::onRule						(			HttpRequest&				aRequest,
+																						HttpResponse&				aResponse							)
+{
+
+	if (!taskManagerPtr_)
+	{
+		return aResponse.notFound() ;
+	}
+
+	if (aRequest.getRequestMethod() == RequestMethod::GET)
+	{
+
+		JsonObjectStream* 		JSONStream										=		new JsonObjectStream() ;
+
+		JsonObject&				JSONObject										=		JSONStream->getRoot() ;
+
+		String					idString										=		aRequest.getQueryParameter("id", "") ;
+		
+		if (idString == "")
+		{
+
+			JsonArray&			ruleArray										=		JSONObject.createNestedArray("rules") ;
+
+			for (uint idx = 0; idx < taskManagerPtr_->accessRules().size(); ++idx)
+			{
+
+				const Rule&		rule 											=		taskManagerPtr_->accessRules().elementAt(idx) ;
+
+				JsonObject&		ruleObject										=		ruleArray.createNestedObject() ;
+
+				ruleObject["id"]												=		(int)rule.getId() ;
+				ruleObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+				ruleObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
+
+			}
+			
+		} else {
+
+			uint				id 												=		idString.toInt() ;
+
+			if (id == 0)
+			{
+				return aResponse.badRequest() ;
+			}
+
+			if (taskManagerPtr_->hasRuleWithId(id))
+			{
+
+				const Rule&		rule 											=		taskManagerPtr_->accessRuleWithId(id) ;
+
+				JSONObject["id"]												=		(int)rule.getId() ;
+				JSONObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+				JSONObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
+
+			}
+
+		}
+
+		aResponse.sendJsonObject(JSONStream) ;
+
+	} else if (aRequest.getRequestMethod() == RequestMethod::POST) {
+
+		String					idString										=		aRequest.getPostParameter("id", "") ;
+
+		uint					id 												=		0 ;
+
+		if (idString != "")
+		{
+
+			id 																	=		idString.toInt() ;
+			
+			if (id == 0)
+			{
+				return aResponse.badRequest() ;
+			}
+
+		} else {
+
+			id 																	=		taskManagerPtr_->getNextRuleId() ;
+
+		}
+
+		// String					executionTimeString								=		aRequest.getPostParameter("execution_time", "") ;
+
+		// if (executionTimeString != "")
+		// {
+
+		// 	Time 				executionTime 									=		Time::Parse(executionTimeString) ;
+
+		// 	if (!executionTime.isDefined())
+		// 	{
+		// 		return aResponse.badRequest() ;
+		// 	}
+
+		// 	if (!taskManagerPtr_->addRule(Rule(id, executionTime)))
+		// 	{
+		// 		return aResponse.badRequest() ;
+		// 	}
+			
+		// } else {
+
+		// 	if (!taskManagerPtr_->addImmediateRule())
+		// 	{
+		// 		return aResponse.badRequest() ;
+		// 	}
+
+		// }
+
+	} else if (aRequest.getRequestMethod() == RequestMethod::DELETE) {
+
+		String					idString										=		aRequest.getQueryParameter("id", "") ;
+		
+		if (idString == "")
+		{
+			return aResponse.badRequest() ;
+		}
+
+		uint					id 												=		idString.toInt() ;
+
+		if (id == 0)
+		{
+			return aResponse.badRequest() ;
+		}
+
+		if (!taskManagerPtr_->removeRuleWithId(id))
+		{
+			return aResponse.badRequest() ;
+		}
 
 	} else {
 

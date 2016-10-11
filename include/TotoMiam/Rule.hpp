@@ -4,23 +4,21 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/TaskManager.hpp
+///	@file 						TotoMiam/Rule.hpp
 ///	@author 					Lucas Bremond <lucas@axelspace.com>
 ///	@date 						9 Oct 2016
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_TaskManager_HPP_INCLUDED__
-#define __TotoMiam_TaskManager_HPP_INCLUDED__
+#ifndef __TotoMiam_Rule_HPP_INCLUDED__
+#define __TotoMiam_Rule_HPP_INCLUDED__
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
 
-#include <TotoMiam/ApplicationStorage.hpp>
-
-#include <TotoMiam/Rule.hpp>
-#include <TotoMiam/Task.hpp>
+#include <TotoMiam/Time.hpp>
+#include <TotoMiam/Duration.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,58 +27,49 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class TaskManager
+class Rule
 {
 
 	public:
 
-								TaskManager 								( ) ;
+		enum class Type
+		{
 
-		bool					isActive									( ) const ;
+			Undefined,
+			Time,
+			Interval
 
-		void					start										( ) ;
-		void					stop										( ) ;
+		} ;
 
-		void					associateApplicationStorage					(			ApplicationStorage&			anApplicationStorage				) ;
+								Rule 										( ) ;
 
-		bool					hasRuleWithId								(	const	uint&						aRuleId								) const ;
-		bool					hasTaskWithId								(	const	uint&						aTaskId								) const ;
+		bool					isDefined									( ) const ;
 
-		const Rule&				accessRuleWithId							(	const	uint&						aRuleId								) const ;
-		const Task&				accessTaskWithId							(	const	uint&						aTaskId								) const ;
+		uint					getId										( ) const ;
+		Rule::Type				getType										( ) const ;
+		Time					getPreviousExecutionTime					( ) const ;
+		Time					getNextExecutionTime						( ) const ;
 
-		const Vector<Rule>&		accessRules									( ) const ;
-		const Vector<Task>&		accessTasks									( ) const ;
+		void 					resetExecutionTime							(	const 	Time&						aTime 								) ;
 
-		uint					getNextRuleId								( ) const ;
-		uint					getNextTaskId								( ) const ;
+		static Rule				AtTime										(	const 	uint&						anId,
+																				const 	Time&						aTime								) ;
 
-		bool					addRule										(	const	Rule&						aRule								) ;
-		bool					addTask										(	const	Task&						aTask								) ;
+		static Rule				AtInterval									(	const 	uint&						anId,
+																				const 	Duration&					aDuration							) ;
 
-		bool					removeRuleWithId							(	const	uint&						aRuleId								) ;
-		bool					removeTaskWithId							(	const	uint&						aTaskId								) ;
-
-		bool					addImmediateTask							( ) ;
+		static String			getStringOfType								(	const 	Rule::Type&					aType								) ;
 
 	private:
 
-		bool					active_ ;
+		uint					id_ ;
+		Rule::Type				type_ ;
+		
+		Time					time_ ;
+		Duration				interval_ ;
 
-		ApplicationStorage*		applicationStoragePtr_ ;
-
-		Vector<Rule>			rules_ ;
-		Vector<Task>			tasks_ ;
-
-		uint					ruleCountLimit_ ;
-		uint					taskCountLimit_ ;
-
-		Timer					timer_ ;
-
-		void					load										( ) ;
-		void					save										( ) ;
-
-		void					onManage									( ) ;
+		Time 					previousExecutionTime_ ;
+		mutable Time 			nextExecutionTime_ ;
 
 } ;
 

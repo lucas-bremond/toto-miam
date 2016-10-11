@@ -85,6 +85,11 @@ void							Task::execute								( )
 
 }
 
+Task 							Task::Undefined								( )
+{
+	return Task() ;
+}
+
 String							Task::getStringOfStatus						(	const 	Task::Status&				aStatus								)
 {
 

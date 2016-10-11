@@ -1,8 +1,35 @@
 # TotoMiam
 
-ESP8266 software for TotoMiam
+ESP8266 firmware for TotoMiam.
+
+## Description
+
+TotoMiam is a wirelessly controlled automomous cat feeding system.
 
 ## Setup
+
+### Configuration
+
+Create a `./files/Setting.json` configuration file with the following content:
+
+```json
+{
+    "network":
+    {
+        "ssid": "WIFI_SSID",
+        "password": "WIFI_PASSWORD"
+    }
+
+}
+```
+
+### Build
+
+```bash
+make flash
+```
+
+## Misc. (to be removed)
 
 ### Mac OS X (native)
 
@@ -20,10 +47,6 @@ git clone https://github.com/raburton/esptool2.git
 cd esptool2 && make
 export PATH=$PATH:PATH_TO_DIR/esptool2
 export PATH=$PATH:/Users/lucas/Documents/Projets/TotoMiam/Software/esptool2
-
-
-
-
 
 ### Mac OS X (Docker)
 

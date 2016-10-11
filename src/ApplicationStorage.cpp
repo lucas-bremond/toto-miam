@@ -62,8 +62,6 @@ void 							ApplicationStorage::load					( )
 		ssid_ 																	=		network["ssid"].asString() ;
 		password_ 																=		network["password"].asString() ;
 
-		Serial.println("ssid_ = " + ssid_) ;
-
 		delete[] jsonString ;
 
 	}
