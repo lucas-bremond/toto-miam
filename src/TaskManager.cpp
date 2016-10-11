@@ -58,6 +58,17 @@ void							TaskManager::start							( )
 	this->addTask(Task(3, Time::Now() + Duration::Seconds(30))) ;
 	this->addTask(Task(4, Time::Now() + Duration::Seconds(40))) ;
 
+	// this->addTask(Task(1, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(2, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(3, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(4, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(5, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(6, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(7, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(8, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(9, Time::Now() + Duration::Seconds(3600))) ;
+	// this->addTask(Task(10, Time::Now() + Duration::Seconds(3600))) ;
+
 	timer_.initializeMs(5000, Delegate<void()>(&TaskManager::onManage, this)).start() ; // TBM param
 
 	Serial.println("Starting Task Manager [OK]") ;
@@ -236,13 +247,6 @@ bool							TaskManager::addRule						(	const	Rule&						aRule								)
 
 	}
 
-	// while (rules_.size() >= ruleCountLimit_)
-	// {
-
-	// 	rules_.removeElementAt(0) ;
-
-	// }
-
 	if (rules_.size() < ruleCountLimit_)
 	{
 
@@ -273,10 +277,8 @@ bool							TaskManager::addTask						(	const	Task&						aTask								)
 
 	}
 
-	while (tasks_.size() >= taskCountLimit_)
+	if (tasks_.size() >= taskCountLimit_)
 	{
-
-		wdt_feed() ;
 
 		if (tasks_.firstElement().getStatus() != Task::Status::Pending)
 		{

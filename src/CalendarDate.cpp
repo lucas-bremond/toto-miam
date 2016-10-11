@@ -90,6 +90,36 @@ String							CalendarDate::getString						( ) const
 
 }
 
+void							CalendarDate::setYear						( 	const 	int16_t&					aYearCount							)
+{
+	year_																		=			aYearCount ;
+}
+
+void							CalendarDate::setMonth						( 	const 	int8_t&						aMonthCount							)
+{
+	month_																		=			aMonthCount ;
+}
+
+void							CalendarDate::setDay						( 	const 	int8_t&						aDayCount							)
+{
+	day_																		=			aDayCount ;
+}
+
+void							CalendarDate::setHours						( 	const 	int8_t&						aHourCount							)
+{
+	hours_																		=			aHourCount ;
+}
+
+void							CalendarDate::setMinutes					( 	const 	int8_t&						aMinuteCount						)
+{
+	minutes_																	=			aMinuteCount ;
+}
+
+void							CalendarDate::setSeconds					( 	const 	int8_t&						aSecondCount						)
+{
+	seconds_																	=			aSecondCount ;
+}
+
 CalendarDate 					CalendarDate::Undefined						( )
 {
 	

@@ -10,6 +10,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <TotoMiam/CalendarDate.hpp>
+
 #include <TotoMiam/Time.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +104,8 @@ Time 							Time::Now									( )
 
 	// return Time(UTCTime) ;
 
+	// TBM => probably wrong
+
 	return Time::Unix(SystemClock.now(TimeZone::eTZ_UTC).toUnixTime()) ;
 
 }
@@ -185,6 +189,17 @@ Time 							Time::Parse									( 	const 	String&						aTimeString							)
 	DateTime 					dateTime ;
 
 	dateTime.setTime(seconds, minutes, hours, day, month, year) ;
+
+	return Time::Unix(dateTime.toUnixTime()) ;
+
+}
+
+Time 							Time::CalendarDate							( 	const 	TotoMiam::CalendarDate&		aCalendarDate						)
+{
+
+	DateTime 					dateTime ;
+
+	dateTime.setTime(aCalendarDate.getSeconds(), aCalendarDate.getMinutes(), aCalendarDate.getHours(), aCalendarDate.getDay(), aCalendarDate.getMonth(), aCalendarDate.getYear()) ;
 
 	return Time::Unix(dateTime.toUnixTime()) ;
 

@@ -10,6 +10,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <TotoMiam/CalendarDate.hpp>
+
 #include <TotoMiam/Rule.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,11 +67,17 @@ Time							Rule::getNextExecutionTime					( ) const
 			if (previousExecutionTime_.isDefined())
 			{
 
-				nextExecutionTime_												=		Time::Undefined() ; // TBM !
+				nextExecutionTime_												=		previousExecutionTime_ + Duration::Seconds(86400) ;
 
 			} else {
 
-				nextExecutionTime_												=		Time::Undefined() ; // TBM !
+				CalendarDate	nextExecutionCalendarDate						=		CalendarDate::Time(Time::Now()) ;
+
+				nextExecutionCalendarDate.setHours(time_.getHours()) ;
+				nextExecutionCalendarDate.setMinutes(time_.getMinutes()) ;
+				nextExecutionCalendarDate.setSeconds(time_.getSeconds()) ;
+
+				nextExecutionTime_												=		Time::CalendarDate(nextExecutionCalendarDate) ;
 
 			}
 
@@ -110,14 +118,14 @@ void 							Rule::resetExecutionTime					(	const 	Time&						aTime 								)
 }
 
 Rule							Rule::AtTime								(	const 	uint&						anId,
-																				const 	Time&						aTime								)
+																				const 	CalendarDate&				aCalendarDate						)
 {
 
 	Rule						rule ;
 
 	rule.id_																	=		anId ;
 	rule.type_																	=		Rule::Type::Time ;
-	rule.time_																	=		aTime ;
+	rule.time_																	=		aCalendarDate ;
 
 	return rule ;
 

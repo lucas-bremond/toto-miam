@@ -18,6 +18,7 @@
 #include <SmingCore/SmingCore.h>
 
 #include <TotoMiam/Time.hpp>
+#include <TotoMiam/CalendarDate.hpp>
 #include <TotoMiam/Duration.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +54,7 @@ class Rule
 		void 					resetExecutionTime							(	const 	Time&						aTime 								) ;
 
 		static Rule				AtTime										(	const 	uint&						anId,
-																				const 	Time&						aTime								) ;
+																				const 	CalendarDate&				aCalendarDate						) ;
 
 		static Rule				AtInterval									(	const 	uint&						anId,
 																				const 	Duration&					aDuration							) ;
@@ -65,7 +66,7 @@ class Rule
 		uint					id_ ;
 		Rule::Type				type_ ;
 		
-		Time					time_ ;
+		CalendarDate			time_ ;
 		Duration				interval_ ;
 
 		Time 					previousExecutionTime_ ;

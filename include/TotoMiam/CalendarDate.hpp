@@ -43,12 +43,18 @@ class CalendarDate
 		int16_t					getYear										( ) const ;
 		int8_t					getMonth									( ) const ;
 		int8_t					getDay										( ) const ;
-		
 		int8_t					getHours									( ) const ;
 		int8_t					getMinutes									( ) const ;
 		int8_t					getSeconds									( ) const ;
 
 		String					getString									( ) const ;
+
+		void					setYear										( 	const 	int16_t&					aYearCount							) ;
+		void					setMonth									( 	const 	int8_t&						aMonthCount							) ;
+		void					setDay										( 	const 	int8_t&						aDayCount							) ;
+		void					setHours									( 	const 	int8_t&						aHourCount							) ;
+		void					setMinutes									( 	const 	int8_t&						aMinuteCount						) ;
+		void					setSeconds									( 	const 	int8_t&						aSecondCount						) ;
 
 		static CalendarDate 	Undefined									( ) ;
 
@@ -59,7 +65,6 @@ class CalendarDate
 		int16_t					year_ ;
 		int8_t					month_ ;
 		int8_t					day_ ;
-
 		int8_t					hours_ ;
 		int8_t					minutes_ ;
 		int8_t					seconds_ ;
