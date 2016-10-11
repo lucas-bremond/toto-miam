@@ -1,8 +1,8 @@
-# Toto/Miam
+# Toto|Miam
 
 ## Description
 
-Toto/Miam is a wirelessly controlled automomous cat feeding system.
+Toto|Miam is a wirelessly controlled automomous cat feeding system.
 
 ## Hardware
 
