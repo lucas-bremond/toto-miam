@@ -23,9 +23,12 @@ extern "C" {
 
 	#define SERIAL_BAUD_RATE 115200
 
-	// Led
+	// Pins
 
-	#define LED_PIN 13
+	#define PIN_LED 13
+
+	#define PIN_MOTOR_Ap 0
+	#define PIN_MOTOR_Am 5
 
 	// ESP SDK config
 	#define LWIP_OPEN_SRC

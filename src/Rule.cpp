@@ -24,6 +24,9 @@ namespace TotoMiam
 								Rule::Rule 									( )
 								:	id_(0),
 									type_(Rule::Type::Undefined),
+									time_(CalendarDate::Undefined()),
+									interval_(Duration::Zero()),
+									taskDuration_(Duration::Zero()),
 									previousExecutionTime_(Time::Undefined()),
 									nextExecutionTime_(Time::Undefined())
 {
@@ -43,6 +46,21 @@ uint							Rule::getId									( ) const
 Rule::Type 						Rule::getType								( ) const
 {
 	return type_ ;
+}
+
+CalendarDate					Rule::getTime 								( ) const
+{
+	return time_ ;
+}
+
+Duration 						Rule::getInterval 							( ) const
+{
+	return interval_ ;
+}
+
+Duration 						Rule::getTaskDuration						( ) const
+{
+	return taskDuration_ ;
 }
 
 Time							Rule::getPreviousExecutionTime				( ) const
@@ -118,7 +136,8 @@ void 							Rule::resetExecutionTime					(	const 	Time&						aTime 								)
 }
 
 Rule							Rule::AtTime								(	const 	uint&						anId,
-																				const 	CalendarDate&				aCalendarDate						)
+																				const 	CalendarDate&				aCalendarDate,
+																				const 	Duration&					aTaskDuration						)
 {
 
 	Rule						rule ;
@@ -126,20 +145,23 @@ Rule							Rule::AtTime								(	const 	uint&						anId,
 	rule.id_																	=		anId ;
 	rule.type_																	=		Rule::Type::Time ;
 	rule.time_																	=		aCalendarDate ;
+	rule.taskDuration_															=		aTaskDuration ;
 
 	return rule ;
 
 }
 
 Rule							Rule::AtInterval							(	const 	uint&						anId,
-																				const 	Duration&					aDuration							)
+																				const 	Duration&					anInterval,
+																				const 	Duration&					aTaskDuration						)
 {
 
 	Rule						rule ;
 
 	rule.id_																	=		anId ;
 	rule.type_																	=		Rule::Type::Interval ;
-	rule.interval_																=		aDuration ;
+	rule.interval_																=		anInterval ;
+	rule.taskDuration_															=		aTaskDuration ;
 
 	return rule ;
 

@@ -45,13 +45,18 @@ class Task
 								Task 										( ) ;
 
 								Task 										( 	const 	uint&						anId,
-																				const 	Time&						anExecutionTime						) ;
+																				const 	Time&						anExecutionTime,
+																				const 	Duration&					aDuration							=	Duration::Seconds(3),
+																				const 	uint&						aRuleId								=	0 ) ;
 
 		bool					isDefined									( ) const ;
+		bool					isRuleDefined								( ) const ;
 
 		uint					getId										( ) const ;
 		Task::Status 			getStatus									( ) const ;
 		Time 					getExecutionTime							( ) const ;
+		Duration				getDuration									( ) const ;
+		uint					getRuleId									( ) const ;
 
 		void					setStatus									(	const 	Task::Status&				aStatus								) ;
 
@@ -66,6 +71,9 @@ class Task
 		uint					id_ ;
 		Task::Status			status_ ;
 		Time 					executionTime_ ;
+		Duration				duration_ ;
+
+		uint					ruleId_ ;
 
 } ;
 

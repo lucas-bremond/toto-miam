@@ -18,22 +18,28 @@
 
 namespace TotoMiam
 {
-bool state = true ;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 								Task::Task 									( )
 								:	id_(0),
 									status_(Task::Status::Undefined),
-									executionTime_(Time::Undefined())
+									executionTime_(Time::Undefined()),
+									duration_(Duration::Zero()),
+									ruleId_(0)
 {
 
 }
 
 								Task::Task 									( 	const 	uint&						anId,
-																				const 	Time&						anExecutionTime						)
+																				const 	Time&						anExecutionTime,
+																				const 	Duration&					aDuration,
+																				const 	uint&						aRuleId								)
 								:	id_(anId),
 									status_(Task::Status::Pending),
-									executionTime_(anExecutionTime)
+									executionTime_(anExecutionTime),
+									duration_(aDuration),
+									ruleId_(aRuleId)
 {
 
 }
@@ -41,6 +47,11 @@ bool state = true ;
 bool							Task::isDefined								( ) const
 {
 	return status_ != Task::Status::Undefined ;
+}
+
+bool							Task::isRuleDefined							( ) const
+{
+	return ruleId_ > 0 ;
 }
 
 uint							Task::getId									( ) const
@@ -58,6 +69,16 @@ Time 							Task::getExecutionTime						( ) const
 	return executionTime_ ;
 }
 
+Duration						Task::getDuration							( ) const
+{
+	return duration_ ;
+}
+
+uint							Task::getRuleId								( ) const
+{
+	return ruleId_ ;
+}
+
 void							Task::setStatus								(	const 	Task::Status&				aStatus								)
 {
 	status_																		=		aStatus ;
@@ -70,18 +91,27 @@ void							Task::execute								( )
 
 	status_																		=		Task::Status::Executing ;
 
-	// digitalWrite(LED_PIN, HIGH) ;
+	// LED
+
+	// digitalWrite(PIN_LED, HIGH) ;
 
 	// delay(3000) ;
 
-	// digitalWrite(LED_PIN, LOW) ;
+	// digitalWrite(PIN_LED, LOW) ;
 
-	digitalWrite(LED_PIN, state);
-	state = !state;
+	// digitalWrite(PIN_LED, state);
+
+	// Motor
+
+
+
+	// Revert state
+
+	// state = !state ;
 	
-	status_																		=		Task::Status::Completed ;
+	// status_																		=		Task::Status::Completed ;
 
-	Serial.println("Executing task [OK]") ;
+	// Serial.println("Executing task [OK]") ;
 
 }
 

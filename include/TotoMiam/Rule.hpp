@@ -48,16 +48,21 @@ class Rule
 
 		uint					getId										( ) const ;
 		Rule::Type				getType										( ) const ;
+		CalendarDate			getTime 									( ) const ;
+		Duration 				getInterval 								( ) const ;
+		Duration 				getTaskDuration								( ) const ;
 		Time					getPreviousExecutionTime					( ) const ;
 		Time					getNextExecutionTime						( ) const ;
 
 		void 					resetExecutionTime							(	const 	Time&						aTime 								) ;
 
 		static Rule				AtTime										(	const 	uint&						anId,
-																				const 	CalendarDate&				aCalendarDate						) ;
+																				const 	CalendarDate&				aCalendarDate,
+																				const 	Duration&					aTaskDuration						) ;
 
 		static Rule				AtInterval									(	const 	uint&						anId,
-																				const 	Duration&					aDuration							) ;
+																				const 	Duration&					anInterval,
+																				const 	Duration&					aTaskDuration						) ;
 
 		static String			getStringOfType								(	const 	Rule::Type&					aType								) ;
 
@@ -68,6 +73,7 @@ class Rule
 		
 		CalendarDate			time_ ;
 		Duration				interval_ ;
+		Duration				taskDuration_ ;
 
 		Time 					previousExecutionTime_ ;
 		mutable Time 			nextExecutionTime_ ;

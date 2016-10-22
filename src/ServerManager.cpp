@@ -169,6 +169,24 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 				ruleObject["id"]												=		(int)rule.getId() ;
 				ruleObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+
+				switch (rule.getType())
+				{
+
+					case Rule::Type::Time:
+						ruleObject["time"]										=		(String)rule.getTime().getString() ;
+						break ;
+
+					case Rule::Type::Interval:
+						ruleObject["interval"]									=		(String)rule.getInterval().getString() ;
+						break ;
+
+					default:
+						// Do nothing...
+						break ;
+
+				}
+
 				ruleObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
 
 			}
@@ -189,6 +207,24 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 				JSONObject["id"]												=		(int)rule.getId() ;
 				JSONObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+
+				switch (rule.getType())
+				{
+
+					case Rule::Type::Time:
+						JSONObject["time"]										=		(String)rule.getTime().getString() ;
+						break ;
+
+					case Rule::Type::Interval:
+						JSONObject["interval"]									=		(String)rule.getInterval().getString() ;
+						break ;
+
+					default:
+						// Do nothing...
+						break ;
+
+				}
+
 				JSONObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
 
 			}
@@ -218,6 +254,8 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 			id 																	=		taskManagerPtr_->getNextRuleId() ;
 
 		}
+
+		// TBI
 
 		// String					executionTimeString								=		aRequest.getPostParameter("execution_time", "") ;
 
@@ -308,6 +346,11 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 				taskObject["status"]											=		(String)Task::getStringOfStatus(task.getStatus()) ;
 				taskObject["execution_time"]									=		(String)task.getExecutionTime().getString() ;
 
+				if (task.isRuleDefined())
+				{
+					taskObject["rule_id"]										=		(int)task.getRuleId() ;
+				}
+
 			}
 			
 		} else {
@@ -327,6 +370,11 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 				JSONObject["id"]												=		(int)task.getId() ;
 				JSONObject["status"]											=		(String)Task::getStringOfStatus(task.getStatus()) ;
 				JSONObject["execution_time"]									=		(String)task.getExecutionTime().getString() ;
+
+				if (task.isRuleDefined())
+				{
+					JSONObject["rule_id"]										=		(int)task.getRuleId() ;
+				}
 
 			}
 

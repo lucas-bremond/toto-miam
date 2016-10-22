@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // #include <TotoMiam/AppSettings.hpp>
+#include <TotoMiam/Configuration.hpp>
 #include <TotoMiam/Duration.hpp>
 
 #include <TotoMiam/TaskManager.hpp>
@@ -26,7 +27,11 @@ namespace TotoMiam
 								:	active_(false),
 									applicationStoragePtr_(nullptr),
 									ruleCountLimit_(10),
-									taskCountLimit_(10)
+									taskCountLimit_(10),
+									motorTimerLoopMs_(10),
+									currentTaskPtr_(nullptr),
+									motorCount_(0),
+									motorMaxCount_(0)
 {
 
 }
@@ -48,15 +53,23 @@ void							TaskManager::start							( )
 
 	active_																		=		true ;
 
+	// ledPWM.initialize();
+
+	// procTimer.initializeMs(10, doPWM).start();
+
+	motorDriver_.initialize() ;
+
+	motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)).start() ; // TBM param
+
 	this->load() ;
 
-	this->addRule(Rule::AtInterval(1, Duration::Seconds(10))) ;
-	this->addRule(Rule::AtInterval(2, Duration::Seconds(30))) ;
+	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20))) ;
+	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30))) ;
 
-	this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
-	this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
-	this->addTask(Task(3, Time::Now() + Duration::Seconds(30))) ;
-	this->addTask(Task(4, Time::Now() + Duration::Seconds(40))) ;
+	// this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
+	// this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
+	// this->addTask(Task(3, Time::Now() + Duration::Seconds(30))) ;
+	// this->addTask(Task(4, Time::Now() + Duration::Seconds(40))) ;
 
 	// this->addTask(Task(1, Time::Now() + Duration::Seconds(3600))) ;
 	// this->addTask(Task(2, Time::Now() + Duration::Seconds(3600))) ;
@@ -69,7 +82,7 @@ void							TaskManager::start							( )
 	// this->addTask(Task(9, Time::Now() + Duration::Seconds(3600))) ;
 	// this->addTask(Task(10, Time::Now() + Duration::Seconds(3600))) ;
 
-	timer_.initializeMs(5000, Delegate<void()>(&TaskManager::onManage, this)).start() ; // TBM param
+	timer_.initializeMs(1000, Delegate<void()>(&TaskManager::onManage, this)).start() ; // TBM param
 
 	Serial.println("Starting Task Manager [OK]") ;
 
@@ -407,6 +420,10 @@ void							TaskManager::onManage						( )
 
 				task.execute() ;
 
+				motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
+
+				currentTaskPtr_													=		&task ;
+
 				this->save() ;
 
 				return ;
@@ -426,12 +443,30 @@ void							TaskManager::onManage						( )
 
 		Rule&					rule 											=		rules_[idx] ;
 
-		if (currentTime <= rule.getNextExecutionTime())
+		bool					hasCorrespondingPendingTask						=		false ;
+
+		for (uint idx = 0; idx < tasks_.size(); ++idx)
+		{
+
+			Task&				task 											=		tasks_[idx] ;
+
+			if (task.isRuleDefined() && (task.getRuleId() == rule.getId()) && (task.getStatus() == Task::Status::Pending))
+			{
+				
+				hasCorrespondingPendingTask										=		true ;
+
+				break ;
+
+			}
+
+		}
+
+		if (!hasCorrespondingPendingTask)
 		{
 
 			// Adding task...
 
-			this->addTask(Task(this->getNextTaskId(), rule.getNextExecutionTime())) ;
+			this->addTask(Task(this->getNextTaskId(), rule.getNextExecutionTime(), rule.getTaskDuration(), rule.getId())) ;
 
 			rule.resetExecutionTime(rule.getNextExecutionTime()) ;
 
@@ -444,6 +479,44 @@ void							TaskManager::onManage						( )
 	}
 
 	// Serial.println("Managing tasks [OK]") ;
+
+}
+
+void							TaskManager::doManageMotor					( )
+{
+
+	if ((currentTaskPtr_ != nullptr) && (motorCount_ < motorMaxCount_))
+	{
+
+		// Serial.println(motorCount_) ;
+
+		digitalWrite(PIN_LED, true) ;
+		
+		motorDriver_.analogWrite(PIN_MOTOR_Am, 100) ; // TBM param
+
+		motorCount_++ ;
+
+	} else {
+
+		if (currentTaskPtr_ != nullptr)
+		{
+
+			motorDriver_.analogWrite(PIN_MOTOR_Am, 0) ;
+
+			digitalWrite(PIN_LED, false) ;
+
+			motorCount_															=		0 ;
+			motorMaxCount_														=		0 ;
+
+			currentTaskPtr_->setStatus(Task::Status::Completed) ;
+
+			currentTaskPtr_														=		nullptr ;
+
+			Serial.println("Executing task [OK]") ;
+
+		}
+
+	}
 
 }
 

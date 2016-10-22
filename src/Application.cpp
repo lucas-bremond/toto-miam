@@ -206,9 +206,18 @@ void							init										( )
 
 	// Pin setup
 
-	pinMode(LED_PIN, OUTPUT) ;
+	pinMode(PIN_LED, OUTPUT) ;
+	pinMode(PIN_MOTOR_Ap, OUTPUT) ; // 0
+	pinMode(PIN_MOTOR_Am, OUTPUT) ; // 5
 
-	digitalWrite(LED_PIN, LOW) ;
+	digitalWrite(PIN_LED, LOW) ;
+	digitalWrite(PIN_MOTOR_Ap, 1) ; // 0
+	digitalWrite(PIN_MOTOR_Am, 0) ; // 5
+
+	
+
+	// ledPWM.analogWrite(5, 600);
+	// digitalWrite(0, 1);
 
 	// Starting application
 
