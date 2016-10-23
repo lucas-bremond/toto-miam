@@ -55,6 +55,8 @@ class WiFiManager
 		Delegate<void()>		connectionSuccessHandler_ ;
 		Delegate<void()>		connectionFailureHandler_ ;
 
+		void					startmDNS									( ) ;
+
 		void					onConnectionSuccess							( ) ;
 		void					onConnectionFailure							( ) ;
 

@@ -4,20 +4,18 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/ServerManager.hpp
+///	@file 						TotoMiam/Version.hpp
 ///	@author 					Lucas Bremond <lucas@axelspace.com>
 ///	@date 						9 Oct 2016
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_ServerManager_HPP_INCLUDED__
-#define __TotoMiam_ServerManager_HPP_INCLUDED__
+#ifndef __TotoMiam_Version_HPP_INCLUDED__
+#define __TotoMiam_Version_HPP_INCLUDED__
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
-
-#include <TotoMiam/TaskManager.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,45 +24,26 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ServerManager
+class Version
 {
 
 	public:
 
-								ServerManager 								( ) ;
+		uint					getMajor									( ) const ;
+		uint					getMinor									( ) const ;
+		uint					getPatch									( ) const ;
 
-		bool					isActive									( ) const ;
+		String					getString									( ) const ;
 
-		void					start										( ) ;
-		void					stop										( ) ;
-
-		void					associateTaskManager						(			TaskManager&				aTaskManager						) ;
+		static Version 			Current										( ) ;
 
 	private:
 
-		uint					port_ ;
+		uint					major_ ;
+		uint					minor_ ;
+		uint					patch_ ;
 
-		HttpServer*				serverPtr_ ;
-
-		TaskManager*			taskManagerPtr_ ;
-
-		void					onIndex										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onFile										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onStatus									(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onCurrentTime								(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onRule										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onTask										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
+								Version										( ) ;
 
 } ;
 

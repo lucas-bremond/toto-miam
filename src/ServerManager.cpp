@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <TotoMiam/ServerManager.hpp>
+#include <TotoMiam/Version.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,8 +54,9 @@ void							ServerManager::start						( )
 
 		serverPtr_->listen(port_) ;
 
-		serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onStatus, this)) ;
+		serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onFile, this)) ;
 
+		serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onIndex, this)) ;
 		serverPtr_->addPath("/status", HttpPathDelegate(&ServerManager::onStatus, this)) ;
 		serverPtr_->addPath("/current_time", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
 		serverPtr_->addPath("/rule", HttpPathDelegate(&ServerManager::onRule, this)) ;
@@ -91,6 +93,42 @@ void							ServerManager::associateTaskManager			(			TaskManager&				aTaskManage
 	taskManagerPtr_																=		&aTaskManager ;
 }
 
+void							ServerManager::onIndex						(			HttpRequest&				aRequest,
+																						HttpResponse&				aResponse							)
+{
+
+	aResponse.setCache(86400, true) ;
+
+	aResponse.sendFile("index.html") ;
+
+}
+
+void							ServerManager::onFile						(			HttpRequest&				aRequest,
+																						HttpResponse&				aResponse							)
+{
+	String						file											=		aRequest.getPath() ;
+
+	if (file[0] == '/')
+	{
+		file 																	=		file.substring(1) ;
+	}
+
+	if (file[0] == '.')
+	{
+
+		aResponse.forbidden() ;
+		
+	}
+	else
+	{
+	
+		aResponse.setCache(86400, true) ;
+		aResponse.sendFile(file) ;
+	
+	}
+
+}
+
 void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
@@ -103,6 +141,7 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 		JsonObject&				JSONObject										=		JSONStream->getRoot() ;
 	
 		JSONObject["status"]													=		(bool)true ;
+		JSONObject["version"]													=		(String)Version::Current().getString() ;
 
 		aResponse.sendJsonObject(JSONStream) ;
 
@@ -464,54 +503,3 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// void onIndex(HttpRequest &request, HttpResponse &response)
-// {
-// 	TemplateFileStream *tmpl = new TemplateFileStream("index.html");
-// 	auto &vars = tmpl->variables();
-// 	//vars["counter"] = String(counter);
-// 	response.sendTemplate(tmpl); // this template object will be deleted automatically
-// }
-
-// void onFile(HttpRequest &request, HttpResponse &response)
-// {
-// 	String file = request.getPath();
-// 	if (file[0] == '/')
-// 		file = file.substring(1);
-
-// 	if (file[0] == '.')
-// 		response.forbidden();
-// 	else
-// 	{
-// 		response.setCache(86400, true); // It's important to use cache for better performance.
-// 		response.sendFile(file);
-// 	}
-// }
-
-// void onAjaxInput(HttpRequest &request, HttpResponse &response)
-// {
-// 	JsonObjectStream* stream = new JsonObjectStream();
-// 	JsonObject& json = stream->getRoot();
-// 	json["status"] = (bool)true;
-
-// 	String stringKey = "StringKey";
-// 	String stringValue = "StringValue";
-
-// 	json[stringKey] = stringValue;
-
-//     for( int i = 0; i < 11; i++)
-//     {
-//         char buff[3];
-//         itoa(i, buff, 10);
-//         String desiredString = "sensor_";
-//         desiredString += buff;
-//         json[desiredString] = desiredString;
-//     }
-
-
-// 	JsonObject& gpio = json.createNestedObject("gpio");
-// 	for (int i = 0; i < countInputs; i++)
-// 		gpio[namesInput[i].c_str()] = digitalRead(inputs[i]);
-
-// 	response.sendJsonObject(stream);
-// }

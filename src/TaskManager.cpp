@@ -492,7 +492,8 @@ void							TaskManager::doManageMotor					( )
 
 		digitalWrite(PIN_LED, true) ;
 		
-		motorDriver_.analogWrite(PIN_MOTOR_Am, 100) ; // TBM param
+		motorDriver_.analogWrite(PIN_MOTOR_Am, 250) ; // TBM param
+		// motorDriver_.setDuty(PIN_MOTOR_Am, 100) ; // TBM param
 
 		motorCount_++ ;
 
