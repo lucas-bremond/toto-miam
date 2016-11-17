@@ -59,12 +59,16 @@ void							TaskManager::start							( )
 
 	motorDriver_.initialize() ;
 
-	motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)).start() ; // TBM param
+	motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)) ; // TBM param
+	
+	motorTimer_.start() ;
+
+	stepperMotorController_														=		StepperMotorController::Pins(D0, D1, D2, D3) ; // TBM param
 
 	this->load() ;
 
-	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20))) ;
-	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30))) ;
+	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20), Duration::Seconds(3))) ;
+	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30), Duration::Seconds(3))) ;
 
 	// this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
 	// this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
@@ -82,7 +86,9 @@ void							TaskManager::start							( )
 	// this->addTask(Task(9, Time::Now() + Duration::Seconds(3600))) ;
 	// this->addTask(Task(10, Time::Now() + Duration::Seconds(3600))) ;
 
-	timer_.initializeMs(1000, Delegate<void()>(&TaskManager::onManage, this)).start() ; // TBM param
+	timer_.initializeMs(1000, Delegate<void()>(&TaskManager::onManage, this)) ; // TBM param
+	
+	timer_.start() ;
 
 	Serial.println("Starting Task Manager [OK]") ;
 
@@ -97,6 +103,10 @@ void							TaskManager::stop							( )
 	{
 		return ;
 	}
+
+	motorTimer_.stop() ;
+	
+	timer_.stop() ;
 
 	active_																		=		false ;
 
@@ -418,11 +428,18 @@ void							TaskManager::onManage						( )
 
 				// Executing task...
 
+				Serial.println("Executing task...") ;
+
 				task.execute() ;
 
-				motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
+				// motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
 
-				currentTaskPtr_													=		&task ;
+				// currentTaskPtr_													=		&task ;
+
+				if (!stepperMotorController_.isBusy())
+				{
+					stepperMotorController_.rotate(Angle::Degrees(180.0)) ;
+				}
 
 				this->save() ;
 

@@ -58,7 +58,11 @@ void							Application::start							( )
 
 	if (statusTimerEnabled_)
 	{
-		statusTimer_.initializeMs(1000, Delegate<void()>(&Application::onPrintStatus, this)).start() ;
+
+		statusTimer_.initializeMs(1000, Delegate<void()>(&Application::onPrintStatus, this)) ; // TBM param
+		
+		statusTimer_.start() ;
+	
 	}
 
 	// WiFi client setup
