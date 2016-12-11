@@ -24,12 +24,19 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+class Time ;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class Duration
 {
 
 	public:
 
 								Duration 									( ) ;
+
+								Duration 									( 	const 	Time&						anEarlierTime,
+																				const 	Time&						aLaterTime							) ;
 
 		bool					operator ==									(	const 	Duration&					aDuration 							) const ;
 		bool					operator !=									(	const 	Duration&					aDuration 							) const ;
@@ -38,16 +45,22 @@ class Duration
 		bool					operator >=									(	const 	Duration&					aDuration 							) const ;
 		bool					operator >									(	const 	Duration&					aDuration 							) const ;
 
-		time_t					getSeconds									( ) const ;
+		bool					isDefined									( ) const ;
+
+		int						getSeconds									( ) const ;
 		String					getString									( ) const ;
+
+		static Duration 		Undefined									( ) ;
 
 		static Duration 		Zero										( ) ;
 
-		static Duration 		Seconds										( 	const 	time_t&						aSecondCount						) ;
+		static Duration 		Seconds										( 	const 	int&						aSecondCount						) ;
+		static Duration 		Minutes										( 	const 	int&						aMinuteCount						) ;
 
 	private:
 
-		time_t					duration_ ;
+		bool					defined_ ;
+		int						duration_ ;
 
 } ;
 

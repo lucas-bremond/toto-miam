@@ -85,7 +85,7 @@ Time							Rule::getNextExecutionTime					( ) const
 			if (previousExecutionTime_.isDefined())
 			{
 
-				nextExecutionTime_												=		previousExecutionTime_ + Duration::Seconds(86400) ;
+				nextExecutionTime_												=		previousExecutionTime_ + Duration::Seconds(86400) ; // 86400 = 24 x 3600
 
 			} else {
 
@@ -96,6 +96,11 @@ Time							Rule::getNextExecutionTime					( ) const
 				nextExecutionCalendarDate.setSeconds(time_.getSeconds()) ;
 
 				nextExecutionTime_												=		Time::CalendarDate(nextExecutionCalendarDate) ;
+
+				if (nextExecutionTime_ < Time::Now())
+				{
+					nextExecutionTime_											=		nextExecutionTime_ + Duration::Seconds(86400) ; // 86400 = 24 x 3600
+				}
 
 			}
 

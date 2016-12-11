@@ -10,6 +10,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <TotoMiam/Time.hpp>
 #include <TotoMiam/Duration.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,42 +21,56 @@ namespace TotoMiam
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 								Duration::Duration 							( )
-								:	duration_(0)
+								:	defined_(false),
+									duration_(0)
 {
 
 }
 
-bool							Duration::operator ==						(	const 	Duration&						aDuration 								) const
+								Duration::Duration 							( 	const 	Time&						anEarlierTime,
+																				const 	Time&						aLaterTime							)
+								:	defined_(true),
+									duration_(aLaterTime.getUnixTime() - anEarlierTime.getUnixTime())
+{
+
+}
+
+bool							Duration::operator ==						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ == aDuration.duration_) ;
 }
 
-bool							Duration::operator !=						(	const 	Duration&						aDuration 								) const
+bool							Duration::operator !=						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ != aDuration.duration_) ;
 }
 
-bool							Duration::operator <=						(	const 	Duration&						aDuration 								) const
+bool							Duration::operator <=						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ <= aDuration.duration_) ;
 }
 
-bool							Duration::operator <						(	const 	Duration&						aDuration 								) const
+bool							Duration::operator <						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ < aDuration.duration_) ;
 }
 
-bool							Duration::operator >=						(	const 	Duration&						aDuration 								) const
+bool							Duration::operator >=						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ >= aDuration.duration_) ;
 }
 
-bool							Duration::operator >						(	const 	Duration&						aDuration 								) const
+bool							Duration::operator >						(	const 	Duration&					aDuration 							) const
 {
 	return (duration_ > aDuration.duration_) ;
 }
 
-time_t							Duration::getSeconds						( ) const
+bool							Duration::isDefined							( ) const
+{
+	return defined_ ;
+}
+
+int								Duration::getSeconds						( ) const
 {
 	return duration_ ;
 }
@@ -71,23 +86,49 @@ String							Duration::getString							( ) const
 
 }
 
-Duration 						Duration::Zero								( )
+Duration 						Duration::Undefined							( )
 {
 	
 	Duration 					duration ;
 
+	duration.defined_															=		false ;
 	duration.duration_															=		0 ;
 
 	return duration ;
 
 }
 
-Duration 						Duration::Seconds							( 	const 	time_t&						aSecondCount						)
+Duration 						Duration::Zero								( )
+{
+	
+	Duration 					duration ;
+
+	duration.defined_															=		true ;
+	duration.duration_															=		0 ;
+
+	return duration ;
+
+}
+
+Duration 						Duration::Seconds							( 	const 	int&						aSecondCount						)
 {
 
 	Duration 					duration ;
 
+	duration.defined_															=		true ;
 	duration.duration_															=		aSecondCount ;
+
+	return duration ;
+
+}
+
+Duration 						Duration::Minutes							( 	const 	int&						aMinuteCount						)
+{
+
+	Duration 					duration ;
+
+	duration.defined_															=		true ;
+	duration.duration_															=		aMinuteCount * 60 ;
 
 	return duration ;
 

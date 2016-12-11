@@ -32,17 +32,10 @@ namespace TotoMiam
 									ruleCountLimit_(10),
 									taskCountLimit_(10),
 									currentTaskPtr_(nullptr)
-									// stepperMotorController_(D0, D1, D2, D3)
 									// motorTimerLoopMs_(10),
 									// motorCount_(0),
 									// motorMaxCount_(0)
 {
-
-	// stepperMotorControllerPtr_													=		new StepperMotorController(D0, D1, D2, D3) ; // TBM param
-
-	// servoChannelPtr_															=		new(ServoChannel) ;
-
-	// servoChannelPtr_->attach(2) ;
 
 }
 
@@ -81,24 +74,20 @@ void							TaskManager::start							( )
 
 	this->load() ;
 
-	// StepperMotorController AAAA(D0, D1, D2, D3) ; // TBM param
-
-	// if (!AAAA.isBusy())
-	// {
-	// 	AAAA.rotate(Angle::Degrees(-1200.0)) ;
-	// }
+	this->addRule(Rule::AtTime(1, CalendarDate(2016, 12, 11, 20, 30, 0), Duration::Seconds(60))) ;
+	this->addRule(Rule::AtTime(2, CalendarDate(2016, 12, 11, 7, 30, 0), Duration::Seconds(60))) ;
 
 	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20), Duration::Seconds(3))) ;
 	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30), Duration::Seconds(3))) ;
 
-	this->addTask(Task(1, Time::CalendarDate(CalendarDate(2016, 12, 10, 20, 30, 0)))) ;
-	this->addTask(Task(2, Time::CalendarDate(CalendarDate(2016, 12, 11, 7, 30, 0)))) ;
+	// this->addTask(Task(1, Time::CalendarDate(CalendarDate(2016, 12, 10, 20, 30, 0)))) ;
+	// this->addTask(Task(2, Time::CalendarDate(CalendarDate(2016, 12, 11, 7, 30, 0)))) ;
 
-	this->addTask(Task(3, Time::CalendarDate(CalendarDate(2016, 12, 11, 20, 30, 0)))) ;
-	this->addTask(Task(4, Time::CalendarDate(CalendarDate(2016, 12, 12, 7, 30, 0)))) ;
+	// this->addTask(Task(3, Time::CalendarDate(CalendarDate(2016, 12, 11, 20, 30, 0)))) ;
+	// this->addTask(Task(4, Time::CalendarDate(CalendarDate(2016, 12, 12, 7, 30, 0)))) ;
 
-	this->addTask(Task(5, Time::CalendarDate(CalendarDate(2016, 12, 12, 20, 30, 0)))) ;
-	this->addTask(Task(6, Time::CalendarDate(CalendarDate(2016, 12, 13, 7, 30, 0)))) ;
+	// this->addTask(Task(5, Time::CalendarDate(CalendarDate(2016, 12, 12, 20, 30, 0)))) ;
+	// this->addTask(Task(6, Time::CalendarDate(CalendarDate(2016, 12, 13, 7, 30, 0)))) ;
 
 	// this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
 	// this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
@@ -456,36 +445,7 @@ void							TaskManager::onManage						( )
 			if (task.getExecutionTime() <= currentTime)
 			{
 
-				// Executing task...
-
-				// Serial.println("Executing task...") ;
-
 				task.execute() ;
-
-				if (task.getStatus() == Task::Status::Executing)
-				{
-
-					StepperMotorController stepperMotorController(D0, D1, D2, D3) ;
-
-					// stepperMotorController_(D0, D1, D2, D3) ;
-
-					stepperMotorController.rotate(Angle::Degrees(-90.0)) ;
-
-					// stepperMotorControllerPtr_									=		new StepperMotorController(D0, D1, D2, D3) ; // TBM param
-
-					// Serial.println("Servo...") ;
-
-					// ServoChannel* servoChannelPtr_								=		new(ServoChannel) ;
-
-					// servoChannelPtr_->attach(2) ;
-
-					// Serial.println("Servo !") ;
-
-				}
-
-				// motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
-
-				// currentTaskPtr_													=		&task ;
 
 				this->save() ;
 

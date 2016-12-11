@@ -22,8 +22,6 @@
 #include <TotoMiam/Rule.hpp>
 #include <TotoMiam/Task.hpp>
 
-#include <TotoMiam/StepperMotorController.hpp>
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace TotoMiam
@@ -87,7 +85,6 @@ class TaskManager
 		// uint					motorCount_ ;
 		// uint					motorMaxCount_ ;
 
-		// StepperMotorController	stepperMotorController_ ;
 		// ServoChannel*			servoChannelPtr_ ;
 
 		void					load										( ) ;

@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <TotoMiam/Configuration.hpp>
+#include <TotoMiam/StepperMotorController.hpp>
 
 #include <TotoMiam/Task.hpp>
 
@@ -89,27 +90,64 @@ void							Task::execute								( )
 
 	// Serial.println("Executing task...") ;
 
-	status_																		=		Task::Status::Executing ;
+	if (Duration(executionTime_, Time::Now()) <= Duration::Minutes(1))
+	{
 
-	// LED
+		// Executing task...
 
-	// digitalWrite(PIN_LED, HIGH) ;
+		// Serial.println("Executing task...") ;
 
-	// delay(3000) ;
+		status_																	=		Task::Status::Executing ;
 
-	// digitalWrite(PIN_LED, LOW) ;
+		StepperMotorController	stepperMotorController(D0, D1, D2, D3) ;
 
-	// digitalWrite(PIN_LED, state);
+		// stepperMotorController_(D0, D1, D2, D3) ;
 
-	// Motor
+		stepperMotorController.rotate(Angle::Degrees(-90.0)) ;
+
+		// stepperMotorControllerPtr_									=		new StepperMotorController(D0, D1, D2, D3) ; // TBM param
+
+		// Serial.println("Servo...") ;
+
+		// ServoChannel* servoChannelPtr_								=		new(ServoChannel) ;
+
+		// servoChannelPtr_->attach(2) ;
+
+		// Serial.println("Servo !") ;
+
+		status_ 																=		Task::Status::Completed ;
+
+		// LED
+
+		// digitalWrite(PIN_LED, HIGH) ;
+
+		// delay(3000) ;
+
+		// digitalWrite(PIN_LED, LOW) ;
+
+		// digitalWrite(PIN_LED, state);
+
+		// Motor
 
 
 
-	// Revert state
+		// Revert state
 
-	// state = !state ;
-	
-	// status_																		=		Task::Status::Completed ;
+		// state = !state ;
+		
+		// status_																		=		Task::Status::Completed ;
+
+		// motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
+
+		// currentTaskPtr_													=		&task ;
+
+	}
+	else
+	{
+
+		status_ 																=		Task::Status::Failed ;
+
+	}
 
 	// Serial.println("Executing task [OK]") ;
 

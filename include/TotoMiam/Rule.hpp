@@ -58,11 +58,11 @@ class Rule
 
 		static Rule				AtTime										(	const 	uint&						anId,
 																				const 	CalendarDate&				aCalendarDate,
-																				const 	Duration&					aTaskDuration						) ;
+																				const 	Duration&					aTaskDuration						=	Duration::Seconds(3) ) ;
 
 		static Rule				AtInterval									(	const 	uint&						anId,
 																				const 	Duration&					anInterval,
-																				const 	Duration&					aTaskDuration						) ;
+																				const 	Duration&					aTaskDuration						=	Duration::Seconds(3) ) ;
 
 		static String			getStringOfType								(	const 	Rule::Type&					aType								) ;
 
