@@ -176,17 +176,42 @@ Angle 							Angle::Revolutions							( 	const 	float&						aValue								)
 
 }
 
-Angle 							Angle::Parse								( 	const 	String&						anAngleString						)
+Angle 							Angle::Parse								( 	const 	String&						aString								)
 {
 
-	// TBI
+	// 180.0 [deg]
+	// 1.0 [rad]
+	// 3 [rev]
 
-	Angle 						angle ;
+	int 						indexOfOpeningBracket							=		aString.indexOf('[') ;
+	int 						indexOfClosingBracket							=		aString.indexOf(']') ;
 
-	angle.defined_																=		false ;
-	angle.degrees_																=		0.0 ;
+	if ((indexOfOpeningBracket > 1) && (indexOfClosingBracket == aString.length() - 1) && ((indexOfOpeningBracket + 1) < indexOfClosingBracket))
+	{
 
-	return angle ;
+		float 					value 											=		aString.substring(0, indexOfOpeningBracket - 2).toFloat() ;
+		String 					unit 											=		aString.substring(indexOfOpeningBracket + 1, indexOfClosingBracket - 1) ;
+
+		if (unit == "deg")
+		{
+			return Angle::Degrees(value) ;
+		}
+		else if (unit == "rad")
+		{
+			return Angle::Radians(value) ;
+		}
+		else if (unit == "rev")
+		{
+			return Angle::Revolutions(value) ;
+		}
+		else
+		{
+			return Angle::Undefined() ;
+		}
+
+	}
+
+	return Angle::Undefined() ;
 
 }
 

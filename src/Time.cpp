@@ -80,9 +80,14 @@ bool							Time::isDefined								( ) const
 	return (timestamp_ > 0) ;
 }
 
+time_t 							Time::getUnixTime							( ) const
+{
+	return timestamp_ ;
+}
+
 String							Time::getString								( ) const
 {
-	return DateTime(timestamp_).toFullDateTimeString() + " [UTC]" ;
+	return CalendarDate::Time(*this).getString() ;
 }
 
 Time 							Time::Undefined								( )
@@ -121,88 +126,9 @@ Time 							Time::Unix									( 	const 	time_t&						aTimestamp							)
 
 }
 
-Time 							Time::Parse									( 	const 	String&						aTimeString							)
-{
-
-	// XXXX-XX-XX XX:XX:XX [UTC]
-
-	if (aTimeString.length() != 25)
-	{
-		return Time::Undefined() ;
-	}
-
-	Serial.println(aTimeString) ;
-
-	int16_t 					year											=		aTimeString.substring(0, 4).toInt() ;
-	int8_t 						month											=		aTimeString.substring(5, 7).toInt() ;
-	int8_t 						day												=		aTimeString.substring(8, 10).toInt() ;
-
-	int8_t 						hours											=		aTimeString.substring(11, 13).toInt() ;
-	int8_t 						minutes											=		aTimeString.substring(14, 16).toInt() ;
-	int8_t 						seconds											=		aTimeString.substring(17, 19).toInt() ;
-
-	String 						timeScale										=		aTimeString.substring(20, 25) ;
-
-	Serial.println(year) ;
-	Serial.println(month) ;
-	Serial.println(day) ;
-	Serial.println(hours) ;
-	Serial.println(minutes) ;
-	Serial.println(seconds) ;
-	Serial.println(timeScale) ;
-
-	if ((year < 1970) || (year > 2050))
-	{
-		return Time::Undefined() ;
-	}
-
-	if ((month < 1) || (month > 12))
-	{
-		return Time::Undefined() ;
-	}
-
-	if ((day < 1) || (day > 31))
-	{
-		return Time::Undefined() ;
-	}
-
-	if ((hours < 0) || (hours > 24))
-	{
-		return Time::Undefined() ;
-	}
-
-	if ((minutes < 0) || (minutes > 60))
-	{
-		return Time::Undefined() ;
-	}
-
-	if ((seconds < 0) || (seconds > 60))
-	{
-		return Time::Undefined() ;
-	}
-
-	if (timeScale != "[UTC]")
-	{
-		return Time::Undefined() ;
-	}
-
-	DateTime 					dateTime ;
-
-	dateTime.setTime(seconds, minutes, hours, day, month, year) ;
-
-	return Time::Unix(dateTime.toUnixTime()) ;
-
-}
-
 Time 							Time::CalendarDate							( 	const 	TotoMiam::CalendarDate&		aCalendarDate						)
 {
-
-	DateTime 					dateTime ;
-
-	dateTime.setTime(aCalendarDate.getSeconds(), aCalendarDate.getMinutes(), aCalendarDate.getHours(), aCalendarDate.getDay(), aCalendarDate.getMonth(), aCalendarDate.getYear()) ;
-
-	return Time::Unix(dateTime.toUnixTime()) ;
-
+	return Time::Unix(DateTime::convertToUnixTime(aCalendarDate.getSeconds(), aCalendarDate.getMinutes(), aCalendarDate.getHours(), aCalendarDate.getDay(), aCalendarDate.getMonth() - 1, aCalendarDate.getYear())) ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

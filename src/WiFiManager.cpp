@@ -22,7 +22,8 @@ namespace TotoMiam
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 								WiFiManager::WiFiManager					( )
-								:	SSID_(""),
+								:	mode_(WiFiManager::Mode::Station),
+									SSID_(""),
 									password_(""),
 									active_(false),
 									applicationStoragePtr_(nullptr)
@@ -35,58 +36,84 @@ bool							WiFiManager::isActive						( ) const
 	return active_ ;
 }
 
+WiFiManager::Mode				WiFiManager::getMode						( ) const
+{
+	return mode_ ;
+}
+
+void							WiFiManager::setMode						(	const 	WiFiManager::Mode&			aMode								)
+{
+	mode_																		=		aMode ;
+}
+
 void							WiFiManager::start							( )
 {
 
-	Serial.println("Starting WiFi Manager...") ;
+	// Serial.println("Starting WiFi Manager...") ;
 
 	if (this->isActive())
 	{
 		this->stop() ;
 	}
 
-	if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
+	active_																		=		true ;
+
+	WifiStation.enable(mode_ == WiFiManager::Mode::Station) ;
+	WifiAccessPoint.enable(mode_ == WiFiManager::Mode::AccessPoint) ;
+
+	if (mode_ == WiFiManager::Mode::Station)
 	{
 
-		SSID_																	=		applicationStoragePtr_->accessSSID() ;
-		password_																=		applicationStoragePtr_->accessPassword() ;
+		if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
+		{
 
-		Serial.println("SSID = " + SSID_) ;
-	
-	} else {
+			SSID_																=		applicationStoragePtr_->accessSSID() ;
+			password_															=		applicationStoragePtr_->accessPassword() ;
 
-		return ;
+			// Serial.println("SSID = " + SSID_) ;
+		
+		}
+
+		WifiStation.config(SSID_, password_) ;
+
+		WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 30, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
 
 	}
 
-	active_																		=		true ;
+	if (mode_ == WiFiManager::Mode::AccessPoint)
+	{
 
-	WifiStation.enable(true) ;
-	WifiStation.config(SSID_, password_) ;
+		connectionSuccessHandler_() ;
 
-	WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 30, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
+	}
 
-	WifiAccessPoint.enable(false) ;
-
-	Serial.println("Starting WiFi Manager [OK]") ;
+	// Serial.println("Starting WiFi Manager [OK]") ;
 
 }
 
 void							WiFiManager::stop							( )
 {
 
-	Serial.println("Stopping WiFi Manager...") ;
+	// Serial.println("Stopping WiFi Manager...") ;
 
 	if (!this->isActive())
 	{
 		return ;
 	}
 
-	WifiStation.enable(false) ;
+	if (mode_ == WiFiManager::Mode::Station)
+	{
+		WifiStation.enable(false) ;
+	}
+
+	if (mode_ == WiFiManager::Mode::AccessPoint)
+	{
+		WifiAccessPoint.enable(false) ;
+	}
 
 	active_																		=		false ;
 
-	Serial.println("Stopping WiFi Manager [OK]") ;
+	// Serial.println("Stopping WiFi Manager [OK]") ;
 
 }
 
@@ -108,7 +135,7 @@ void							WiFiManager::setConnectionFailureHandler	(			Delegate<void()>			aDele
 void							WiFiManager::startmDNS						( )
 {
 
-	Serial.println("Starting mDNS...") ;
+	// Serial.println("Starting mDNS...") ;
 
 	struct mdns_info*			info											=		(struct mdns_info*)os_zalloc(sizeof(struct mdns_info)) ;
 	
@@ -120,14 +147,14 @@ void							WiFiManager::startmDNS						( )
 
 	espconn_mdns_init(info) ;
 
-	Serial.println("Starting mDNS [OK]") ;
+	// Serial.println("Starting mDNS [OK]") ;
 
 }
 
 void							WiFiManager::onConnectionSuccess			( )
 {
 
-	Serial.println("WiFi connection successful...") ;
+	// Serial.println("WiFi connection successful...") ;
 
 	if (!active_)
 	{
@@ -146,21 +173,26 @@ void							WiFiManager::onConnectionSuccess			( )
 void							WiFiManager::onConnectionFailure			( )
 {
 
-	Serial.println("WiFi connection failed...") ;
+	// Serial.println("WiFi connection failed...") ;
 
 	if (!active_)
 	{
 		return ;
 	}
 
-	// Retry connection
-
-	WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 10, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
-
-	if (connectionFailureHandler_)
+	if (mode_ == WiFiManager::Mode::Station)
 	{
-		connectionFailureHandler_() ;
-	}
+
+		// Retry connection
+
+		WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 10, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
+
+		if (connectionFailureHandler_)
+		{
+			connectionFailureHandler_() ;
+		}
+
+	}	
 
 }
 

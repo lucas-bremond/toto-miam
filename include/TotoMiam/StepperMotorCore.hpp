@@ -4,18 +4,20 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/Angle.hpp
+///	@file 						TotoMiam/StepperMotorCore.hpp
 ///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+///	@date 						17 Nov 2016
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Angle_HPP_INCLUDED__
-#define __TotoMiam_Angle_HPP_INCLUDED__
+#ifndef __TotoMiam_StepperMotorCore_HPP_INCLUDED__
+#define __TotoMiam_StepperMotorCore_HPP_INCLUDED__
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
+
+#include <TotoMiam/Angle.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,48 +26,47 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Angle
+class StepperMotorController ;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class StepperMotorCore
 {
 
 	public:
 
-								Angle 										( ) ;
+								StepperMotorCore							( ) ;
 
-		bool					operator ==									(	const 	Angle&						anAngle 							) const ;
-		bool					operator !=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator <=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator <									(	const 	Angle&						anAngle 							) const ;
-		bool					operator >=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator >									(	const 	Angle&						anAngle 							) const ;
+		virtual					~StepperMotorCore							( ) ;
 
-		Angle 					operator +									(	const 	Angle&						anAngle								) const ;
-		Angle 					operator -									(	const 	Angle&						anAngle								) const ;
+		bool					hasChannel									(			StepperMotorController&		aStepperMotorController				) const ;
+		bool					isChannelBusy								(	const	StepperMotorController&		aStepperMotorController				) const ;
 
-		bool					isDefined									( ) const ;
-		bool					isZero										( ) const ;
+		void					start										( ) ;
+		void					stop										( ) ;
 
-		float					getDegrees									( ) const ;
-		float					getRadians									( ) const ;
-		float					getRevolutions								( ) const ;
+		void					addChannel									( 			StepperMotorController&		aStepperMotorController				) ;
+		void					removeChannel								( 			StepperMotorController&		aStepperMotorController				) ;
 
-		String					getString									( ) const ;
-
-		static Angle 			Undefined									( ) ;
-
-		static Angle 			Zero										( ) ;
-
-		static Angle 			Degrees										( 	const 	float&						aValue								) ;
-		static Angle 			Radians										( 	const 	float&						aValue								) ;
-		static Angle 			Revolutions									( 	const 	float&						aValue								) ;
-
-		static Angle 			Parse										( 	const 	String&						aString								) ;
+		void					rotate										(	const	Angle&						anAngle,
+																						StepperMotorController&		aStepperMotorController				) ;
 
 	private:
 
-		bool					defined_ ;
-		float					degrees_ ;
+		// struct Channel
+		// {
+
+		// 	StepperMotorController* stepperMotorControllerPtr_ ;
+			
+		// } ;
+
+		Vector<StepperMotorController*> channels_ ;
 
 } ;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+extern StepperMotorCore 		stepperMotorCore ;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

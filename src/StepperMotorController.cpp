@@ -12,6 +12,8 @@
 
 #include <TotoMiam/Configuration.hpp>
 
+#include <TotoMiam/StepperMotorCore.hpp>
+
 #include <TotoMiam/StepperMotorController.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,22 +23,27 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-byte							phases[]										=		{1, 3, 2, 6, 4, 12, 8, 9} ;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-								StepperMotorController::StepperMotorController ( )
-								:	pin_A_(0),
-									pin_B_(0),
-									pin_C_(0),
-									pin_D_(0),
-									stepsPerRotation_(4096),
-									busy_(false),
-									phase_(0),
-									steps_(0),
-									dir_(0),
-									i_(0)
+								StepperMotorController::StepperMotorController ( const	uint8_t&					aFirstPin,
+																				const	uint8_t&					aSecondPin,
+																				const	uint8_t&					aThirdPin,
+																				const	uint8_t&					aFourthPin							)
+								:	pin_A_(aFirstPin),
+									pin_B_(aSecondPin),
+									pin_C_(aThirdPin),
+									pin_D_(aFourthPin),
+									inputRadius_(1.5), // TBM param
+									outputRadius_(4.0), // TBM param
+									stepsPerRotation_(4096) // TBM param
 {
+
+	stepperMotorCore.addChannel(*this) ;
+
+}
+
+								StepperMotorController::~StepperMotorController ( )
+{
+
+	// stepperMotorCore.removeChannel(*this) ;
 
 }
 
@@ -47,13 +54,13 @@ bool							StepperMotorController::isDefined			( ) const
 
 bool							StepperMotorController::isBusy				( ) const
 {
-	return busy_ ;
+	return stepperMotorCore.isChannelBusy(*this) ;
 }
 
 void							StepperMotorController::rotate				(	const	Angle&						anAngle								)
 {
 
-	Serial.println("StepperMotorController :: rotate...") ;
+	// Serial.println("StepperMotorController :: rotate...") ;
 
 	if (!this->isDefined())
 	{
@@ -65,107 +72,124 @@ void							StepperMotorController::rotate				(	const	Angle&						anAngle								
 		return ;
 	}
 
-	this->reset() ;
+	stepperMotorCore.rotate(anAngle, *this) ;
 
-	busy_																		=		true ;
+	// this->reset() ;
 
-	steps_ 																		=		anAngle.getRevolutions() * stepsPerRotation_ ;
+	// busy																		=		true ;
 
-	dir_																		=		(steps_ > 0) - (steps_ < 0) ;
+	// steps 																		=		anAngle.getRevolutions() * stepsPerRotation_ ;
 
-	// Serial.println("StepperMotorController :: rotate >> dir_ = ") ;
-	// Serial.println(dir_) ;
+	// dir																			=		(steps > 0) - (steps < 0) ;
+
+	// Serial.println("StepperMotorController :: rotate >> dir = ") ;
+	// Serial.println(dir) ;
 	
-	steps_																	   *=		dir_ ;
+	// steps																	   *=		dir ;
 
 	// Serial.println("StepperMotorController :: rotate >> steps_ = ") ;
 	// Serial.println(steps_) ;
 
-	timer_.initializeMs(1, Delegate<void()>(&StepperMotorController::loop, this)) ; // TBM param
+	// timer_.initializeMs(1, Delegate<void()>(&StepperMotorController::loop, this)) ; // TBM param
 	
-	timer_.start() ;
+	// timer_.start() ;
+
+	// pin_A																		=		pin_A_ ;
+	// pin_B																		=		pin_B_ ;
+	// pin_C																		=		pin_C_ ;
+	// pin_D																		=		pin_D_ ;
+
+	// busy 																		=		true ;
+	// phase																		=		phase_ ;
+	// steps																		=		steps_ ;
+	// dir																			=		dir_ ;
+	// i																			=		i_ ;
+
+	// hardwareTimer.initializeUs(2000, StepperTimerInt) ; // TBM param
+	
+	// hardwareTimer.startOnce() ;
 
 }
 
-StepperMotorController			StepperMotorController::Pins				(	const	uint8_t&					aFirstPin,
-																				const	uint8_t&					aSecondPin,
-																				const	uint8_t&					aThirdPin,
-																				const	uint8_t&					aFourthPin							)
-{
+// StepperMotorController			StepperMotorController::Pins				(	const	uint8_t&					aFirstPin,
+// 																				const	uint8_t&					aSecondPin,
+// 																				const	uint8_t&					aThirdPin,
+// 																				const	uint8_t&					aFourthPin							)
+// {
 
-	StepperMotorController		stepperMotorController ;
+// 	StepperMotorController		stepperMotorController ;
 
-	stepperMotorController.pin_A_												=		aFirstPin ;
-	stepperMotorController.pin_B_												=		aSecondPin ;
-	stepperMotorController.pin_C_												=		aThirdPin ;
-	stepperMotorController.pin_D_												=		aFourthPin ;
+// 	stepperMotorController.pin_A_												=		aFirstPin ;
+// 	stepperMotorController.pin_B_												=		aSecondPin ;
+// 	stepperMotorController.pin_C_												=		aThirdPin ;
+// 	stepperMotorController.pin_D_												=		aFourthPin ;
 
-	return stepperMotorController ;
+// 	return stepperMotorController ;
 
-}
+// }
 
-void							StepperMotorController::loop				( )
-{
+// void							StepperMotorController::loop				( )
+// {
 
-	// Serial.println("StepperMotorController :: loop...") ;
+// 	// Serial.println("StepperMotorController :: loop...") ;
 
-	// Serial.print("StepperMotorController :: loop >> i_ = ") ;
-	// Serial.println(i_) ;
+// 	// Serial.print("StepperMotorController :: loop >> i_ = ") ;
+// 	// Serial.println(i_) ;
 
-	if (i_ < steps_)
-	{
+// 	// if (i_ <= steps_)
+// 	// {
 
-		this->writePins(phases[phase_]) ;
+// 	// 	this->writePins(phases[phase_]) ;
 
-		phase_																	=		(8 + phase_ + dir_) % 8 ;
+// 	// 	phase_																	=		(8 + phase_ + dir_) % 8 ;
 		
-		i_++ ;
+// 	// 	i_++ ;
 
-	} else {
+// 	// } else {
 
-		timer_.stop() ;
+// 	// 	timer_.stop() ;
 
-		this->reset() ;
+// 	// 	this->reset() ;
 
-	}
+// 	// }
 
-}
+// }
 
-void							StepperMotorController::writePins			(	const	int&						aBitmap								)
-{
+// void							StepperMotorController::writePins			(	const	int&						aBitmap								)
+// {
 
-	// Serial.println("StepperMotorController :: writePins...") ;
+// 	// Serial.println("StepperMotorController :: writePins...") ;
 	
-	// Serial.print("StepperMotorController :: writePins >> aBitmap = ") ;
-	// Serial.println(aBitmap) ;
+// 	// Serial.print("StepperMotorController :: writePins >> aBitmap = ") ;
+// 	// Serial.println(aBitmap) ;
 
-	digitalWrite(pin_A_, aBitmap & 8 ? HIGH : LOW) ;
-	digitalWrite(pin_B_, aBitmap & 4 ? HIGH : LOW) ;
-	digitalWrite(pin_C_, aBitmap & 2 ? HIGH : LOW) ;
-	digitalWrite(pin_D_, aBitmap & 1 ? HIGH : LOW) ;
+// 	digitalWrite(pin_A_, aBitmap & 8 ? HIGH : LOW) ;
+// 	digitalWrite(pin_B_, aBitmap & 4 ? HIGH : LOW) ;
+// 	digitalWrite(pin_C_, aBitmap & 2 ? HIGH : LOW) ;
+// 	digitalWrite(pin_D_, aBitmap & 1 ? HIGH : LOW) ;
 
-}
+// }
 
-void							StepperMotorController::reset				( )
-{
+// void							StepperMotorController::reset				( )
+// {
 
-	// Serial.println("StepperMotorController :: reset...") ;
+// 	// Serial.println("StepperMotorController :: reset...") ;
 
-	pinMode(pin_A_, OUTPUT) ;
-	pinMode(pin_B_, OUTPUT) ;
-	pinMode(pin_C_, OUTPUT) ;
-	pinMode(pin_D_, OUTPUT) ;
+// 	pinMode(pin_A_, OUTPUT) ;
+// 	pinMode(pin_B_, OUTPUT) ;
+// 	pinMode(pin_C_, OUTPUT) ;
+// 	pinMode(pin_D_, OUTPUT) ;
 
-	this->writePins(0) ;
+// 	this->writePins(0) ;
 
-	phase_																		=		0 ;
-	steps_																		=		0 ;
-	dir_																		=		0 ;
-	i_																			=		0 ;
+// 	phase_																		=		0 ;
+// 	steps_																		=		0 ;
+// 	dir_																		=		0 ;
+// 	i_																			=		0 ;
 
-	busy_																		=		false ;
+// 	busy_																		=		false ;
 
-}
+// }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -40,7 +40,7 @@ bool							ServerManager::isActive						( ) const
 void							ServerManager::start						( )
 {
 
-	Serial.println("Starting Server Manager...") ;
+	// Serial.println("Starting Server Manager...") ;
 
 	if (this->isActive())
 	{
@@ -55,25 +55,27 @@ void							ServerManager::start						( )
 		serverPtr_->listen(port_) ;
 
 		serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onFile, this)) ;
+		// serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
 
 		serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onIndex, this)) ;
+		// serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
 		serverPtr_->addPath("/status", HttpPathDelegate(&ServerManager::onStatus, this)) ;
 		serverPtr_->addPath("/current_time", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
 		serverPtr_->addPath("/rule", HttpPathDelegate(&ServerManager::onRule, this)) ;
 		serverPtr_->addPath("/task", HttpPathDelegate(&ServerManager::onTask, this)) ;
 
-		Serial.println(WifiStation.getIP()) ;
+		// Serial.println(WifiStation.getIP()) ;
 
 	}
 
-	Serial.println("Starting Server Manager [OK]") ;
+	// Serial.println("Starting Server Manager [OK]") ;
 
 }
 
 void							ServerManager::stop							( )
 {
 
-	Serial.println("Stopping Server Manager...") ;
+	// Serial.println("Stopping Server Manager...") ;
 
 	if (!this->isActive())
 	{
@@ -84,7 +86,7 @@ void							ServerManager::stop							( )
 
 	serverPtr_																	=		nullptr ;
 
-	Serial.println("Stopping Server Manager [OK]") ;
+	// Serial.println("Stopping Server Manager [OK]") ;
 
 }
 
@@ -106,6 +108,7 @@ void							ServerManager::onIndex						(			HttpRequest&				aRequest,
 void							ServerManager::onFile						(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
+	
 	String						file											=		aRequest.getPath() ;
 
 	if (file[0] == '/')
@@ -145,7 +148,9 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 
 		aResponse.sendJsonObject(JSONStream) ;
 
-	} else {
+	}
+	else
+	{
 
 		aResponse.badRequest() ;
 
@@ -168,7 +173,9 @@ void							ServerManager::onCurrentTime				(			HttpRequest&				aRequest,
 
 		aResponse.sendJsonObject(JSONStream) ;
 
-	} else {
+	}
+	else
+	{
 
 		aResponse.badRequest() ;
 
@@ -230,7 +237,9 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 			}
 			
-		} else {
+		}
+		else
+		{
 
 			uint				id 												=		idString.toInt() ;
 
@@ -272,7 +281,9 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 		aResponse.sendJsonObject(JSONStream) ;
 
-	} else if (aRequest.getRequestMethod() == RequestMethod::POST) {
+	}
+	else if (aRequest.getRequestMethod() == RequestMethod::POST)
+	{
 
 		String					idString										=		aRequest.getPostParameter("id", "") ;
 
@@ -288,7 +299,9 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 				return aResponse.badRequest() ;
 			}
 
-		} else {
+		}
+		else
+		{
 
 			id 																	=		taskManagerPtr_->getNextRuleId() ;
 
@@ -311,9 +324,11 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 		// 	if (!taskManagerPtr_->addRule(Rule(id, executionTime)))
 		// 	{
 		// 		return aResponse.badRequest() ;
-		// 	}
-			
-		// } else {
+		// 	}	
+		
+		// }
+		// else
+		// {
 
 		// 	if (!taskManagerPtr_->addImmediateRule())
 		// 	{
@@ -322,7 +337,9 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 		// }
 
-	} else if (aRequest.getRequestMethod() == RequestMethod::DELETE) {
+	}
+	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
+	{
 
 		String					idString										=		aRequest.getQueryParameter("id", "") ;
 		
@@ -343,7 +360,9 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 			return aResponse.badRequest() ;
 		}
 
-	} else {
+	}
+	else
+	{
 
 		aResponse.badRequest() ;
 
@@ -392,7 +411,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 
 			}
 			
-		} else {
+		}
+		else
+		{
 
 			uint				id 												=		idString.toInt() ;
 
@@ -421,7 +442,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 
 		aResponse.sendJsonObject(JSONStream) ;
 
-	} else if (aRequest.getRequestMethod() == RequestMethod::POST) {
+	}
+	else if (aRequest.getRequestMethod() == RequestMethod::POST)
+	{
 
 		String					idString										=		aRequest.getPostParameter("id", "") ;
 
@@ -437,7 +460,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 				return aResponse.badRequest() ;
 			}
 
-		} else {
+		}
+		else
+		{
 
 			id 																	=		taskManagerPtr_->getNextTaskId() ;
 
@@ -448,7 +473,7 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 		if (executionTimeString != "")
 		{
 
-			Time 				executionTime 									=		Time::Parse(executionTimeString) ;
+			Time 				executionTime 									=		Time::CalendarDate(CalendarDate::Parse(executionTimeString)) ;
 
 			if (!executionTime.isDefined())
 			{
@@ -460,7 +485,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 				return aResponse.badRequest() ;
 			}
 			
-		} else {
+		}
+		else
+		{
 
 			if (!taskManagerPtr_->addImmediateTask())
 			{
@@ -469,7 +496,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 
 		}
 
-	} else if (aRequest.getRequestMethod() == RequestMethod::DELETE) {
+	}
+	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
+	{
 
 		String					idString										=		aRequest.getQueryParameter("id", "") ;
 		
@@ -490,7 +519,9 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 			return aResponse.badRequest() ;
 		}
 
-	} else {
+	}
+	else
+	{
 
 		aResponse.badRequest() ;
 

@@ -31,6 +31,7 @@ SMING_HOME = ./thirdparty/Sming/Sming
 ## MacOS / Linux:
 # COM_PORT = /dev/tty.usbserial
 COM_PORT = /dev/tty.SLAB_USBtoUART
+# COM_PORT = /dev/tty.wchusbserialfd120
 # COM_PORT = /dev/cu.wchusbserialfa130
 
 ## Com port speed
@@ -45,4 +46,8 @@ COM_PORT = /dev/tty.SLAB_USBtoUART
 DISABLE_SPIFFS = 0
 SPIFF_FILES = ./files
 
-ENABLE_GDB=1
+ENABLE_GDB = 0
+
+SPI_SIZE = 4M
+# COM_SPEED = 115200
+# SPI_MODE = dio

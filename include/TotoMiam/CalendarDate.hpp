@@ -35,6 +35,13 @@ class CalendarDate
 
 								CalendarDate 								( ) ;
 
+								CalendarDate 								(	const 	int16_t&					aYear,
+																				const 	int8_t&						aMonth,
+																				const 	int8_t&						aDay,
+																				const 	int8_t&						anHourCount,
+																				const 	int8_t&						aMinuteCount,
+																				const 	int8_t&						aSecondCount						) ;
+
 		bool					operator ==									(	const 	CalendarDate&				aCalendarDate 						) const ;
 		bool					operator !=									(	const 	CalendarDate&				aCalendarDate 						) const ;
 
@@ -59,6 +66,8 @@ class CalendarDate
 		static CalendarDate 	Undefined									( ) ;
 
 		static CalendarDate 	Time										(	const 	TotoMiam::Time&				aTime 								) ;
+
+		static CalendarDate		Parse										( 	const 	String&						aString								) ;
 
 	private:
 

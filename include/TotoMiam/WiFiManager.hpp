@@ -31,9 +31,21 @@ class WiFiManager
 
 	public:
 
+		enum class Mode
+		{
+
+			Station,
+			AccessPoint
+
+		} ;
+
 								WiFiManager 								( ) ;
 
 		bool					isActive									( ) const ;
+
+		WiFiManager::Mode		getMode										( ) const ;
+
+		void					setMode										(	const 	WiFiManager::Mode&			aMode								) ;
 
 		void					start										( ) ;
 		void					stop										( ) ;
@@ -43,7 +55,11 @@ class WiFiManager
 		void					setConnectionSuccessHandler					(			Delegate<void()>			aDelegate							) ;
 		void					setConnectionFailureHandler					(			Delegate<void()>			aDelegate							) ;
 
+		static String			getModeFromString							(	const 	String&						aString								) ;
+
 	private:
+
+		WiFiManager::Mode		mode_ ;
 
 		String					SSID_ ;
 		String					password_ ;

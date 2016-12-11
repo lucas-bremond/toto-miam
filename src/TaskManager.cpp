@@ -10,6 +10,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// #include <Libraries/Servo/ServoChannel.h>
+// #include <TotoMiam/StepperMotorController.hpp>
+
 // #include <TotoMiam/AppSettings.hpp>
 #include <TotoMiam/Configuration.hpp>
 #include <TotoMiam/Duration.hpp>
@@ -28,11 +31,18 @@ namespace TotoMiam
 									applicationStoragePtr_(nullptr),
 									ruleCountLimit_(10),
 									taskCountLimit_(10),
-									motorTimerLoopMs_(10),
-									currentTaskPtr_(nullptr),
-									motorCount_(0),
-									motorMaxCount_(0)
+									currentTaskPtr_(nullptr)
+									// stepperMotorController_(D0, D1, D2, D3)
+									// motorTimerLoopMs_(10),
+									// motorCount_(0),
+									// motorMaxCount_(0)
 {
+
+	// stepperMotorControllerPtr_													=		new StepperMotorController(D0, D1, D2, D3) ; // TBM param
+
+	// servoChannelPtr_															=		new(ServoChannel) ;
+
+	// servoChannelPtr_->attach(2) ;
 
 }
 
@@ -44,7 +54,7 @@ bool							TaskManager::isActive						( ) const
 void							TaskManager::start							( )
 {
 
-	Serial.println("Starting Task Manager...") ;
+	// Serial.println("Starting Task Manager...") ;
 
 	if (this->isActive())
 	{
@@ -57,18 +67,38 @@ void							TaskManager::start							( )
 
 	// procTimer.initializeMs(10, doPWM).start();
 
-	motorDriver_.initialize() ;
+	// motorDriver_.initialize() ;
 
-	motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)) ; // TBM param
+	// motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)) ; // TBM param
 	
-	motorTimer_.start() ;
+	// motorTimer_.start() ;
 
-	stepperMotorController_														=		StepperMotorController::Pins(D0, D1, D2, D3) ; // TBM param
+	// servoChannelPtr_															=		new(ServoChannel) ;
+
+	// servoChannelPtr_->attach(D0) ;
+
+	// servoChannelPtr_->setDegree(1.0) ;
 
 	this->load() ;
 
+	// StepperMotorController AAAA(D0, D1, D2, D3) ; // TBM param
+
+	// if (!AAAA.isBusy())
+	// {
+	// 	AAAA.rotate(Angle::Degrees(-1200.0)) ;
+	// }
+
 	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20), Duration::Seconds(3))) ;
 	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30), Duration::Seconds(3))) ;
+
+	this->addTask(Task(1, Time::CalendarDate(CalendarDate(2016, 12, 10, 20, 30, 0)))) ;
+	this->addTask(Task(2, Time::CalendarDate(CalendarDate(2016, 12, 11, 7, 30, 0)))) ;
+
+	this->addTask(Task(3, Time::CalendarDate(CalendarDate(2016, 12, 11, 20, 30, 0)))) ;
+	this->addTask(Task(4, Time::CalendarDate(CalendarDate(2016, 12, 12, 7, 30, 0)))) ;
+
+	this->addTask(Task(5, Time::CalendarDate(CalendarDate(2016, 12, 12, 20, 30, 0)))) ;
+	this->addTask(Task(6, Time::CalendarDate(CalendarDate(2016, 12, 13, 7, 30, 0)))) ;
 
 	// this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
 	// this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
@@ -90,27 +120,27 @@ void							TaskManager::start							( )
 	
 	timer_.start() ;
 
-	Serial.println("Starting Task Manager [OK]") ;
+	// Serial.println("Starting Task Manager [OK]") ;
 
 }
 
 void							TaskManager::stop							( )
 {
 
-	Serial.println("Stopping Task Manager...") ;
+	// Serial.println("Stopping Task Manager...") ;
 
 	if (!this->isActive())
 	{
 		return ;
 	}
 
-	motorTimer_.stop() ;
+	// motorTimer_.stop() ;
 	
 	timer_.stop() ;
 
 	active_																		=		false ;
 
-	Serial.println("Stopping Task Manager [OK]") ;
+	// Serial.println("Stopping Task Manager [OK]") ;
 
 }
 
@@ -125,7 +155,7 @@ bool							TaskManager::hasRuleWithId					(	const	uint&						aRuleId								) co
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		const Rule&				rule 											=		rules_[idx] ;
 
@@ -146,7 +176,7 @@ bool							TaskManager::hasTaskWithId					(	const	uint&						aTaskId								) co
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		const Task&				task 											=		tasks_[idx] ;
 
@@ -167,7 +197,7 @@ const Rule&						TaskManager::accessRuleWithId				(	const	uint&						aRuleId				
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		const Rule&				rule 											=		rules_[idx] ;
 
@@ -186,7 +216,7 @@ const Task&						TaskManager::accessTaskWithId				(	const	uint&						aTaskId				
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		const Task&				task 											=		tasks_[idx] ;
 
@@ -217,7 +247,7 @@ uint							TaskManager::getNextRuleId					( ) const
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		uint					ruleId 											=		rules_[idx].getId() ;
 
@@ -240,7 +270,7 @@ uint							TaskManager::getNextTaskId					( ) const
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		uint					taskId 											=		tasks_[idx].getId() ;
 
@@ -261,7 +291,7 @@ bool							TaskManager::addRule						(	const	Rule&						aRule								)
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		if (rules_[idx].getId() == aRule.getId())
 		{
@@ -291,7 +321,7 @@ bool							TaskManager::addTask						(	const	Task&						aTask								)
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		if (tasks_[idx].getId() == aTask.getId())
 		{
@@ -416,7 +446,7 @@ void							TaskManager::onManage						( )
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		Task&					task 											=		tasks_[idx] ;
 
@@ -428,18 +458,34 @@ void							TaskManager::onManage						( )
 
 				// Executing task...
 
-				Serial.println("Executing task...") ;
+				// Serial.println("Executing task...") ;
 
 				task.execute() ;
+
+				if (task.getStatus() == Task::Status::Executing)
+				{
+
+					StepperMotorController stepperMotorController(D0, D1, D2, D3) ;
+
+					// stepperMotorController_(D0, D1, D2, D3) ;
+
+					stepperMotorController.rotate(Angle::Degrees(-90.0)) ;
+
+					// stepperMotorControllerPtr_									=		new StepperMotorController(D0, D1, D2, D3) ; // TBM param
+
+					// Serial.println("Servo...") ;
+
+					// ServoChannel* servoChannelPtr_								=		new(ServoChannel) ;
+
+					// servoChannelPtr_->attach(2) ;
+
+					// Serial.println("Servo !") ;
+
+				}
 
 				// motorMaxCount_													=		task.getDuration().getSeconds() * 1000 / motorTimerLoopMs_ ;
 
 				// currentTaskPtr_													=		&task ;
-
-				if (!stepperMotorController_.isBusy())
-				{
-					stepperMotorController_.rotate(Angle::Degrees(180.0)) ;
-				}
 
 				this->save() ;
 
@@ -456,7 +502,7 @@ void							TaskManager::onManage						( )
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		wdt_feed() ;
+		// wdt_feed() ;
 
 		Rule&					rule 											=		rules_[idx] ;
 
@@ -502,39 +548,39 @@ void							TaskManager::onManage						( )
 void							TaskManager::doManageMotor					( )
 {
 
-	if ((currentTaskPtr_ != nullptr) && (motorCount_ < motorMaxCount_))
-	{
+	// if ((currentTaskPtr_ != nullptr) && (motorCount_ < motorMaxCount_))
+	// {
 
-		// Serial.println(motorCount_) ;
+	// 	// Serial.println(motorCount_) ;
 
-		digitalWrite(PIN_LED, true) ;
+	// 	digitalWrite(PIN_LED, true) ;
 		
-		motorDriver_.analogWrite(PIN_MOTOR_Am, 250) ; // TBM param
-		// motorDriver_.setDuty(PIN_MOTOR_Am, 100) ; // TBM param
+	// 	motorDriver_.analogWrite(PIN_MOTOR_Am, 250) ; // TBM param
+	// 	// motorDriver_.setDuty(PIN_MOTOR_Am, 100) ; // TBM param
 
-		motorCount_++ ;
+	// 	motorCount_++ ;
 
-	} else {
+	// } else {
 
-		if (currentTaskPtr_ != nullptr)
-		{
+	// 	if (currentTaskPtr_ != nullptr)
+	// 	{
 
-			motorDriver_.analogWrite(PIN_MOTOR_Am, 0) ;
+	// 		motorDriver_.analogWrite(PIN_MOTOR_Am, 0) ;
 
-			digitalWrite(PIN_LED, false) ;
+	// 		digitalWrite(PIN_LED, false) ;
 
-			motorCount_															=		0 ;
-			motorMaxCount_														=		0 ;
+	// 		motorCount_															=		0 ;
+	// 		motorMaxCount_														=		0 ;
 
-			currentTaskPtr_->setStatus(Task::Status::Completed) ;
+	// 		currentTaskPtr_->setStatus(Task::Status::Completed) ;
 
-			currentTaskPtr_														=		nullptr ;
+	// 		currentTaskPtr_														=		nullptr ;
 
-			Serial.println("Executing task [OK]") ;
+	// 		Serial.println("Executing task [OK]") ;
 
-		}
+	// 	}
 
-	}
+	// }
 
 }
 

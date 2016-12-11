@@ -32,6 +32,22 @@ namespace TotoMiam
 
 }
 
+								CalendarDate::CalendarDate 					(	const 	int16_t&					aYear,
+																				const 	int8_t&						aMonth,
+																				const 	int8_t&						aDay,
+																				const 	int8_t&						anHourCount,
+																				const 	int8_t&						aMinuteCount,
+																				const 	int8_t&						aSecondCount						)
+								:	year_(aYear),
+									month_(aMonth),
+									day_(aDay),
+									hours_(anHourCount),
+									minutes_(aMinuteCount),
+									seconds_(aSecondCount)
+{
+
+}
+
 bool							CalendarDate::operator ==					(	const 	CalendarDate&				aCalendarDate 						) const
 {
 	return (year_ == aCalendarDate.year_) && (month_ == aCalendarDate.month_) && (day_ == aCalendarDate.day_) && (hours_ == aCalendarDate.hours_) && (minutes_ == aCalendarDate.minutes_) && (seconds_ == aCalendarDate.seconds_) ;
@@ -79,6 +95,8 @@ int8_t							CalendarDate::getSeconds					( ) const
 
 String							CalendarDate::getString						( ) const
 {
+
+	// Serial.println("CalendarDate::getString") ;
 	
 	// 2000-01-01 00:00:00 [UTC]
 
@@ -92,32 +110,32 @@ String							CalendarDate::getString						( ) const
 
 void							CalendarDate::setYear						( 	const 	int16_t&					aYearCount							)
 {
-	year_																		=			aYearCount ;
+	year_																		=		aYearCount ;
 }
 
 void							CalendarDate::setMonth						( 	const 	int8_t&						aMonthCount							)
 {
-	month_																		=			aMonthCount ;
+	month_																		=		aMonthCount ;
 }
 
 void							CalendarDate::setDay						( 	const 	int8_t&						aDayCount							)
 {
-	day_																		=			aDayCount ;
+	day_																		=		aDayCount ;
 }
 
 void							CalendarDate::setHours						( 	const 	int8_t&						aHourCount							)
 {
-	hours_																		=			aHourCount ;
+	hours_																		=		aHourCount ;
 }
 
 void							CalendarDate::setMinutes					( 	const 	int8_t&						aMinuteCount						)
 {
-	minutes_																	=			aMinuteCount ;
+	minutes_																	=		aMinuteCount ;
 }
 
 void							CalendarDate::setSeconds					( 	const 	int8_t&						aSecondCount						)
 {
-	seconds_																	=			aSecondCount ;
+	seconds_																	=		aSecondCount ;
 }
 
 CalendarDate 					CalendarDate::Undefined						( )
@@ -140,17 +158,80 @@ CalendarDate 					CalendarDate::Undefined						( )
 CalendarDate					CalendarDate::Time							(	const 	TotoMiam::Time&				aTime 								)
 {
 
+	// Serial.println("CalendarDate::Time") ;
+
 	CalendarDate 				calendarDate ;
 
-	// TBM !!!
+	int8_t						weekDay											=		0 ;
 
-	int16_t 					year											=		0 ;
-	int8_t 						month											=		0 ;
-	int8_t 						day												=		0 ;
+	DateTime::convertFromUnixTime(aTime.getUnixTime(), &calendarDate.seconds_, &calendarDate.minutes_, &calendarDate.hours_, &calendarDate.day_, &weekDay, &calendarDate.month_, &calendarDate.year_) ;
 
-	int8_t 						hours											=		0 ;
-	int8_t 						minutes											=		0 ;
-	int8_t 						seconds											=		0 ;
+	calendarDate.month_++ ;
+
+	if ((calendarDate.year_ < 1970) || (calendarDate.year_ > 2050))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	if ((calendarDate.month_ < 1) || (calendarDate.month_ > 12))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	if ((calendarDate.day_ < 1) || (calendarDate.day_ > 31))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	if ((calendarDate.hours_ < 0) || (calendarDate.hours_ > 24))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	if ((calendarDate.minutes_ < 0) || (calendarDate.minutes_ > 60))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	if ((calendarDate.seconds_ < 0) || (calendarDate.seconds_ > 60))
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	return calendarDate ;
+
+}
+
+CalendarDate					CalendarDate::Parse							( 	const 	String&						aString								)
+{
+
+	// Serial.println("CalendarDate::Parse") ;
+
+	// YYYY-MM-DD hh:mm:ss [UTC]
+
+	if (aString.length() != 25)
+	{
+		return CalendarDate::Undefined() ;
+	}
+
+	int16_t 					year											=		aString.substring(0, 4).toInt() ;
+	int8_t 						month											=		aString.substring(5, 7).toInt() ;
+	int8_t 						day												=		aString.substring(8, 10).toInt() ;
+
+	int8_t 						hours											=		aString.substring(11, 13).toInt() ;
+	int8_t 						minutes											=		aString.substring(14, 16).toInt() ;
+	int8_t 						seconds											=		aString.substring(17, 19).toInt() ;
+
+	String 						timeScale										=		aString.substring(20, 25) ;
+
+	// Serial.println(aString) ;
+	// Serial.println(year) ;
+	// Serial.println(month) ;
+	// Serial.println(day) ;
+	// Serial.println(hours) ;
+	// Serial.println(minutes) ;
+	// Serial.println(seconds) ;
+	// Serial.println(timeScale) ;
 
 	if ((year < 1970) || (year > 2050))
 	{
@@ -182,20 +263,12 @@ CalendarDate					CalendarDate::Time							(	const 	TotoMiam::Time&				aTime 				
 		return CalendarDate::Undefined() ;
 	}
 
-	// if (timeScale != "[UTC]")
-	// {
-	// 	return Time::Undefined() ;
-	// }
+	if (timeScale != "[UTC]")
+	{
+		return CalendarDate::Undefined() ;
+	}
 
-	calendarDate.year_															=		year ;
-	calendarDate.month_															=		month ;
-	calendarDate.day_															=		day ;
-	
-	calendarDate.hours_															=		hours ;
-	calendarDate.minutes_														=		minutes ;
-	calendarDate.seconds_														=		seconds ;
-
-	return calendarDate ;
+	return CalendarDate(seconds, minutes, hours, day, month, year) ;
 
 }
 

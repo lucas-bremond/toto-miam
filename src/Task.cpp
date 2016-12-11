@@ -87,7 +87,7 @@ void							Task::setStatus								(	const 	Task::Status&				aStatus								)
 void							Task::execute								( )
 {
 
-	Serial.println("Executing task...") ;
+	// Serial.println("Executing task...") ;
 
 	status_																		=		Task::Status::Executing ;
 

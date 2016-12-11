@@ -48,6 +48,7 @@ class Time
 
 		bool					isDefined									( ) const ;
 
+		time_t 					getUnixTime									( ) const ;
 		String					getString									( ) const ;
 
 		static Time 			Undefined									( ) ;
@@ -55,8 +56,6 @@ class Time
 		static Time 			Now											( ) ;
 
 		static Time 			Unix										( 	const 	time_t&						aTimestamp							) ;
-
-		static Time 			Parse										( 	const 	String&						aTimeString							) ;
 
 		static Time 			CalendarDate								( 	const 	TotoMiam::CalendarDate&		aCalendarDate						) ;
 

@@ -35,17 +35,22 @@ class StepperMotorController
 
 	public:
 
-								StepperMotorController						( ) ;
+								StepperMotorController						(	const	uint8_t&					aFirstPin,
+																				const	uint8_t&					aSecondPin,
+																				const	uint8_t&					aThirdPin,
+																				const	uint8_t&					aFourthPin							) ;
+
+								~StepperMotorController 					( ) ;
 
 		bool					isDefined									( ) const ;
 		bool					isBusy										( ) const ;
 
 		void					rotate										(	const	Angle&						anAngle								) ;
 
-		static StepperMotorController Pins									(	const	uint8_t&					aFirstPin,
-																				const	uint8_t&					aSecondPin,
-																				const	uint8_t&					aThirdPin,
-																				const	uint8_t&					aFourthPin							) ;
+		// static StepperMotorController Pins									(	const	uint8_t&					aFirstPin,
+		// 																		const	uint8_t&					aSecondPin,
+		// 																		const	uint8_t&					aThirdPin,
+		// 																		const	uint8_t&					aFourthPin							) ;
 
 	private:
 
@@ -54,22 +59,10 @@ class StepperMotorController
 		uint8_t					pin_C_ ;
 		uint8_t					pin_D_ ;
 
+		double					inputRadius_ ;
+		double					outputRadius_ ;
+
 		uint					stepsPerRotation_ ;
-
-		Timer					timer_ ;
-		bool					busy_ ;
-
-		int						phase_ ;
-
-		int						steps_ ;
-		int						dir_ ;
-		int						i_ ;
-
-		void					loop										( ) ;
-
-		void					writePins									(	const	int&						aBitmap								) ;
-
-		void					reset										( ) ;
 
 } ;
 

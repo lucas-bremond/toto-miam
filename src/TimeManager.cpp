@@ -67,23 +67,32 @@ bool							TimeManager::isActive						( ) const
 void							TimeManager::start							( )
 {
 
-	Serial.println("Starting Time Manager...") ;
+	// Serial.println("Starting Time Manager...") ;
 
 	if (this->isActive())
 	{
 		this->stop() ;
 	}
 
-	NTPClient_																	=		new NtpClient(NTPServer_, pollingInterval_, NtpTimeResultDelegate(&TimeManager::onNtpReceive, this)) ;
+	if (true) // TBR
+	{
 
-	Serial.println("Starting Time Manager [OK]") ;
+		NTPClient_																=		new NtpClient(NTPServer_, pollingInterval_, NtpTimeResultDelegate(&TimeManager::onNtpReceive, this)) ;
+	
+	} else {
+
+		clockSetHandler_() ;
+
+	}
+
+	// Serial.println("Starting Time Manager [OK]") ;
 
 }
 
 void							TimeManager::stop							( )
 {
 
-	Serial.println("Stopping Time Manager...") ;
+	// Serial.println("Stopping Time Manager...") ;
 
 	if (!this->isActive())
 	{
@@ -94,7 +103,7 @@ void							TimeManager::stop							( )
 
 	NTPClient_																	=		nullptr ;
 
-	Serial.println("Stopping Time Manager [OK]") ;
+	// Serial.println("Stopping Time Manager [OK]") ;
 
 }
 
@@ -111,7 +120,7 @@ void							TimeManager::onNtpReceive					(			NtpClient&					aNTPClient,
 
 	Serial.print("TimeManager Callback Time_t = ");
 	Serial.print(aNTPTime) ;
-	Serial.print(" Time = ");
+	Serial.print("Time = ");
 	Serial.println(SystemClock.getSystemTimeString());
 
 	if (clockSetHandler_)

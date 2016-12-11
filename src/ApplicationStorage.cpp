@@ -26,7 +26,8 @@ namespace TotoMiam
 
 bool 							ApplicationStorage::isDefined				( )
 {
-	return fileExist(APP_SETTINGS_FILE) ;
+	return true ;
+	// return fileExist(APP_SETTINGS_FILE) ;
 }
 
 const String&					ApplicationStorage::accessSSID				( ) const
@@ -42,55 +43,58 @@ const String&					ApplicationStorage::accessPassword			( ) const
 void 							ApplicationStorage::load					( )
 {
 
-	Serial.println("Loading application storage...") ;
+	// Serial.println("Loading application storage...") ;
 
-	if (this->isDefined())
-	{
+	ssid_																		=		"Tu pues le chat" ;
+	password_																	=		"vivelarepublique!" ;
 
-		DynamicJsonBuffer 		jsonBuffer ;
+	// if (this->isDefined())
+	// {
 
-		int 					size											=		fileGetSize(APP_SETTINGS_FILE) ;
+	// 	DynamicJsonBuffer 		jsonBuffer ;
+
+	// 	int 					size											=		fileGetSize(APP_SETTINGS_FILE) ;
 		
-		char*					jsonString										=		new char[size + 1] ;
+	// 	char*					jsonString										=		new char[size + 1] ;
 		
-		fileGetContent(APP_SETTINGS_FILE, jsonString, size + 1) ;
+	// 	fileGetContent(APP_SETTINGS_FILE, jsonString, size + 1) ;
 
-		JsonObject&				root											=		jsonBuffer.parseObject(jsonString) ;
+	// 	JsonObject&				root											=		jsonBuffer.parseObject(jsonString) ;
 
-		JsonObject& 			network											=		root["network"] ;
+	// 	JsonObject& 			network											=		root["network"] ;
 		
-		ssid_ 																	=		network["ssid"].asString() ;
-		password_ 																=		network["password"].asString() ;
+	// 	ssid_ 																	=		network["ssid"].asString() ;
+	// 	password_ 																=		network["password"].asString() ;
 
-		delete[] jsonString ;
+	// 	delete[] jsonString ;
 
-	}
+	// }
 
-	Serial.println("Loading application storage [OK]") ;
+	// Serial.println("Loading application storage [OK]") ;
 
 }
 
 void 							ApplicationStorage::save					( )
 {
 
-	DynamicJsonBuffer			jsonBuffer ;
+	// DynamicJsonBuffer			jsonBuffer ;
 
-	JsonObject&					root											=		jsonBuffer.createObject() ;
+	// JsonObject&					root											=		jsonBuffer.createObject() ;
 
-	JsonObject&					network											=		jsonBuffer.createObject() ;
+	// JsonObject&					network											=		jsonBuffer.createObject() ;
 	
-	root["network"]																=		network ;
+	// root["network"]																=		network ;
 	
-	network["ssid"]																=		ssid_.c_str() ;
-	network["password"]															=		password_.c_str() ;
+	// network["ssid"]																=		ssid_.c_str() ;
+	// network["password"]															=		password_.c_str() ;
 
-	// TODO: add direct file stream writing
+	// // TODO: add direct file stream writing
 	
-	String						rootString ;
+	// String						rootString ;
 	
-	root.printTo(rootString) ;
+	// root.printTo(rootString) ;
 
-	fileSetContent(APP_SETTINGS_FILE, rootString) ;
+	// fileSetContent(APP_SETTINGS_FILE, rootString) ;
 
 }
 

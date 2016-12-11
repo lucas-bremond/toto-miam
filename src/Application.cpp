@@ -10,6 +10,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <TotoMiam/StepperMotorController.hpp>
+
 #include <TotoMiam/Application.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +51,7 @@ void							Application::start							( )
 	Serial.begin(SERIAL_BAUD_RATE) ;
 	Serial.systemDebugOutput(true) ;
 	
-	Serial.println("Starting application...") ;
+	// Serial.println("Starting application...") ;
 
 	// set timezone hourly difference to UTC
 	// SystemClock.setTimeZone(2);
@@ -74,19 +76,22 @@ void							Application::start							( )
 
 		wifiManager_.setConnectionSuccessHandler(Delegate<void()>(&Application::onWifiConnectionSuccess, this)) ;
 		wifiManager_.setConnectionFailureHandler(Delegate<void()>(&Application::onWifiConnectionFailure, this)) ;
+
+		wifiManager_.setMode(WiFiManager::Mode::Station) ;
+		// wifiManager_.setMode(WiFiManager::Mode::AccessPoint) ;
 		
 		wifiManager_.start() ;
 
 	}
 
-	Serial.println("Starting application [OK]") ;
+	// Serial.println("Starting application [OK]") ;
 
 }
 
 void							Application::stop							( )
 {
 
-	Serial.println("Stopping application...") ;
+	// Serial.println("Stopping application...") ;
 
 	if (taskManager_.isActive())
 	{
@@ -110,7 +115,7 @@ void							Application::stop							( )
 		wifiManager_.stop() ;
 	}
 
-	Serial.println("Stopping application [OK]") ;
+	// Serial.println("Stopping application [OK]") ;
 
 }
 
@@ -122,11 +127,11 @@ void							Application::onPrintStatus					( )
 		return ;
 	}
 
-	Serial.print("Local Time    : ");
-	Serial.println(SystemClock.getSystemTimeString());
+	// Serial.print("Local Time: ");
+	// Serial.println(SystemClock.getSystemTimeString());
 	
-	Serial.print("UTC Time: ");
-	Serial.println(SystemClock.getSystemTimeString(TimeZone::eTZ_UTC));
+	// Serial.print("UTC Time: ");
+	// Serial.println(SystemClock.getSystemTimeString(TimeZone::eTZ_UTC));
 
 }
 
@@ -182,6 +187,13 @@ void							Application::onClockSet						( )
 		
 		taskManager_.start() ;
 
+		// StepperMotorController	AAAA(D0, D1, D2, D3) ; // TBM param
+
+		// if (!AAAA.isBusy())
+		// {
+			// AAAA.rotate(TotoMiam::Angle::Degrees(-1200.0)) ;
+		// }
+
 	}
 
 }
@@ -206,19 +218,19 @@ void							init										( )
 
 	// File system setup
 
+	// System.setCpuFrequency(eCF_80MHz) ;
+
 	spiffs_mount() ;
 
 	// Pin setup
 
-	pinMode(PIN_LED, OUTPUT) ;
-	pinMode(PIN_MOTOR_Ap, OUTPUT) ; // 0
-	pinMode(PIN_MOTOR_Am, OUTPUT) ; // 5
+	// pinMode(PIN_LED, OUTPUT) ;
+	// pinMode(PIN_MOTOR_Ap, OUTPUT) ; // 0
+	// pinMode(PIN_MOTOR_Am, OUTPUT) ; // 5
 
-	digitalWrite(PIN_LED, LOW) ;
-	digitalWrite(PIN_MOTOR_Ap, 1) ; // 0
-	digitalWrite(PIN_MOTOR_Am, 0) ; // 5
-
-	
+	// digitalWrite(PIN_LED, LOW) ;
+	// digitalWrite(PIN_MOTOR_Ap, 1) ; // 0
+	// digitalWrite(PIN_MOTOR_Am, 0) ; // 5	
 
 	// ledPWM.analogWrite(5, 600);
 	// digitalWrite(0, 1);
@@ -226,6 +238,13 @@ void							init										( )
 	// Starting application
 
 	application.start() ;
+
+	// TotoMiam::StepperMotorController AAAA(D0, D1, D2, D3) ; // TBM param
+
+	// if (!AAAA.isBusy())
+	// {
+	// 	AAAA.rotate(TotoMiam::Angle::Degrees(-1200.0)) ;
+	// }
 
 }
 
