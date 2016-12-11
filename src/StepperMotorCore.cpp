@@ -22,6 +22,8 @@ namespace TotoMiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// To do: add multi-channel support
+
 byte							phases[]										=		{1, 3, 2, 6, 4, 12, 8, 9} ;
 
 Hardware_Timer					hardwareTimer ;
@@ -199,14 +201,14 @@ void							StepperMotorCore::addChannel				( 			StepperMotorController&		aSteppe
 
 		channels_.add(&aStepperMotorController) ;
 
-		inputRadius																=		1.5 ; // TBM
-		outputRadius															=		4.0 ; // TBM
-		stepsPerRotation														=		4096 ; // TBM
+		inputRadius																=		aStepperMotorController.getInputRadius() ;
+		outputRadius															=		aStepperMotorController.getOutputRadius() ;
+		stepsPerRotation														=		aStepperMotorController.getStepsPerRotation() ;
 
-		pin_A																	=		D0 ; // TBM
-		pin_B																	=		D1 ; // TBM
-		pin_C																	=		D2 ; // TBM
-		pin_D																	=		D3 ; // TBM
+		pin_A																	=		aStepperMotorController.getPinA() ;
+		pin_B																	=		aStepperMotorController.getPinB() ;
+		pin_C																	=		aStepperMotorController.getPinC() ;
+		pin_D																	=		aStepperMotorController.getPinD() ;
 
 	}
 

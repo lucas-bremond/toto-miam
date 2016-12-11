@@ -74,16 +74,7 @@ void							TimeManager::start							( )
 		this->stop() ;
 	}
 
-	if (true) // TBR
-	{
-
-		NTPClient_																=		new NtpClient(NTPServer_, pollingInterval_, NtpTimeResultDelegate(&TimeManager::onNtpReceive, this)) ;
-	
-	} else {
-
-		clockSetHandler_() ;
-
-	}
+	NTPClient_																	=		new NtpClient(NTPServer_, pollingInterval_, NtpTimeResultDelegate(&TimeManager::onNtpReceive, this)) ;
 
 	// Serial.println("Starting Time Manager [OK]") ;
 

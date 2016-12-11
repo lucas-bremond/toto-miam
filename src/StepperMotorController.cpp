@@ -33,7 +33,8 @@ namespace TotoMiam
 									pin_D_(aFourthPin),
 									inputRadius_(1.5), // TBM param
 									outputRadius_(4.0), // TBM param
-									stepsPerRotation_(4096) // TBM param
+									stepsPerRotation_(4096), // TBM param
+									mode_(StepperMotorController::Mode::Forward)
 {
 
 	stepperMotorCore.addChannel(*this) ;
@@ -55,6 +56,41 @@ bool							StepperMotorController::isDefined			( ) const
 bool							StepperMotorController::isBusy				( ) const
 {
 	return stepperMotorCore.isChannelBusy(*this) ;
+}
+
+double							StepperMotorController::getInputRadius		( ) const
+{
+	return inputRadius_ ;
+}
+
+double							StepperMotorController::getOutputRadius		( ) const
+{
+	return outputRadius_ ;
+}
+
+uint							StepperMotorController::getStepsPerRotation	( ) const
+{
+	return stepsPerRotation_ ;
+}
+
+uint8_t 						StepperMotorController::getPinA				( ) const
+{
+	return pin_A_ ;
+}
+
+uint8_t 						StepperMotorController::getPinB				( ) const
+{
+	return pin_B_ ;
+}
+
+uint8_t 						StepperMotorController::getPinC				( ) const
+{
+	return pin_C_ ;
+}
+
+uint8_t 						StepperMotorController::getPinD				( ) const
+{
+	return pin_D_ ;
 }
 
 void							StepperMotorController::rotate				(	const	Angle&						anAngle								)

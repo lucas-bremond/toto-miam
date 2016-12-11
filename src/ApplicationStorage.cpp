@@ -26,8 +26,7 @@ namespace TotoMiam
 
 bool 							ApplicationStorage::isDefined				( )
 {
-	return true ;
-	// return fileExist(APP_SETTINGS_FILE) ;
+	return fileExist(APP_SETTINGS_FILE) ;
 }
 
 const String&					ApplicationStorage::accessSSID				( ) const
@@ -45,30 +44,27 @@ void 							ApplicationStorage::load					( )
 
 	// Serial.println("Loading application storage...") ;
 
-	ssid_																		=		"Tu pues le chat" ;
-	password_																	=		"vivelarepublique!" ;
+	if (this->isDefined())
+	{
 
-	// if (this->isDefined())
-	// {
+		DynamicJsonBuffer 		jsonBuffer ;
 
-	// 	DynamicJsonBuffer 		jsonBuffer ;
-
-	// 	int 					size											=		fileGetSize(APP_SETTINGS_FILE) ;
+		int 					size											=		fileGetSize(APP_SETTINGS_FILE) ;
 		
-	// 	char*					jsonString										=		new char[size + 1] ;
+		char*					jsonString										=		new char[size + 1] ;
 		
-	// 	fileGetContent(APP_SETTINGS_FILE, jsonString, size + 1) ;
+		fileGetContent(APP_SETTINGS_FILE, jsonString, size + 1) ;
 
-	// 	JsonObject&				root											=		jsonBuffer.parseObject(jsonString) ;
+		JsonObject&				root											=		jsonBuffer.parseObject(jsonString) ;
 
-	// 	JsonObject& 			network											=		root["network"] ;
+		JsonObject& 			network											=		root["network"] ;
 		
-	// 	ssid_ 																	=		network["ssid"].asString() ;
-	// 	password_ 																=		network["password"].asString() ;
+		ssid_ 																	=		network["ssid"].asString() ;
+		password_ 																=		network["password"].asString() ;
 
-	// 	delete[] jsonString ;
+		delete[] jsonString ;
 
-	// }
+	}
 
 	// Serial.println("Loading application storage [OK]") ;
 

@@ -35,6 +35,15 @@ class StepperMotorController
 
 	public:
 
+		enum class Mode
+		{
+
+			Forward,
+			Reverse,
+			Both
+
+		} ;
+
 								StepperMotorController						(	const	uint8_t&					aFirstPin,
 																				const	uint8_t&					aSecondPin,
 																				const	uint8_t&					aThirdPin,
@@ -44,6 +53,15 @@ class StepperMotorController
 
 		bool					isDefined									( ) const ;
 		bool					isBusy										( ) const ;
+
+		double					getInputRadius								( ) const ;
+		double					getOutputRadius								( ) const ;
+		uint					getStepsPerRotation							( ) const ;
+		
+		uint8_t 				getPinA										( ) const ;
+		uint8_t 				getPinB										( ) const ;
+		uint8_t 				getPinC										( ) const ;
+		uint8_t 				getPinD										( ) const ;
 
 		void					rotate										(	const	Angle&						anAngle								) ;
 
@@ -63,6 +81,8 @@ class StepperMotorController
 		double					outputRadius_ ;
 
 		uint					stepsPerRotation_ ;
+
+		StepperMotorController::Mode mode_ ;
 
 } ;
 
