@@ -1,5 +1,5 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-rm -rf ${DIR}/../out
+rm -rf ${current_directory}/../out

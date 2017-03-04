@@ -84,10 +84,10 @@ Time							Rule::getNextExecutionTime					( ) const
 
 			if (previousExecutionTime_.isDefined())
 			{
-
 				nextExecutionTime_												=		previousExecutionTime_ + Duration::Seconds(86400) ; // 86400 = 24 x 3600
-
-			} else {
+			}
+			else
+			{
 
 				CalendarDate	nextExecutionCalendarDate						=		CalendarDate::Time(Time::Now()) ;
 
@@ -113,13 +113,11 @@ Time							Rule::getNextExecutionTime					( ) const
 
 			if (previousExecutionTime_.isDefined())
 			{
-
 				nextExecutionTime_												=		previousExecutionTime_ + interval_ ;
-
-			} else {
-
+			}
+			else
+			{
 				nextExecutionTime_												=		Time::Now() + interval_ ;
-
 			}
 
 			break ;

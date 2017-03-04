@@ -2,7 +2,7 @@
 
 ## Description
 
-Toto|Miam is a wirelessly controlled automomous cat feeding system.
+A wirelessly controlled automatic cat feeding system.
 
 ## Hardware
 

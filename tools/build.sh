@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-${DIR}/clean.sh
+${current_directory}/clean.sh
 
-(cd ${DIR}/.. && make)
+(cd ${current_directory}/.. && make -j 8)

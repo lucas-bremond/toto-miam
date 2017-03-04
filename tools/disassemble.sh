@@ -1,5 +1,5 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-${DIR}/../thirdparty/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/bin/objdump -d ${DIR}/../out/build/app.out >disassemble.txt
+${current_directory}/../thirdparty/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/bin/objdump -d ${current_directory}/../out/build/app.out >disassemble.txt

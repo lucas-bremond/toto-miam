@@ -30,9 +30,9 @@ SMING_HOME = ./thirdparty/Sming/Sming
 
 ## MacOS / Linux:
 # COM_PORT = /dev/tty.usbserial
-COM_PORT = /dev/tty.SLAB_USBtoUART
+# COM_PORT = /dev/tty.SLAB_USBtoUART
 # COM_PORT = /dev/tty.wchusbserialfd120
-# COM_PORT = /dev/cu.wchusbserialfa130
+COM_PORT = /dev/cu.wchusbserialfa130
 
 ## Com port speed
 # COM_SPEED	= 115200

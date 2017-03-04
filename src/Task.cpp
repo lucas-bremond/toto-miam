@@ -144,9 +144,7 @@ void							Task::execute								( )
 	}
 	else
 	{
-
 		status_ 																=		Task::Status::Failed ;
-
 	}
 
 	// Serial.println("Executing task [OK]") ;
