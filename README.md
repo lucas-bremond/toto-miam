@@ -26,16 +26,16 @@ Drive Module Board:
 
 #### Wiring
 
-> `5V <> 5V @ WEMOS D1`
-> `5V <> + @ ULN2003`
+- `5V <> 5V @ WEMOS D1`
+- `5V <> + @ ULN2003`
 
-> `GND <> G @ WEMOS D1`
-> `GND <> - @ ULN2003`
+- `GND <> G @ WEMOS D1`
+- `GND <> - @ ULN2003`
 
-> `D0 @ WEMOS D1 <> IN1 @ ULN2003`
-> `D1 @ WEMOS D1 <> IN2 @ ULN2003`
-> `D2 @ WEMOS D1 <> IN3 @ ULN2003`
-> `D3 @ WEMOS D1 <> IN4 @ ULN2003`
+- `D0 @ WEMOS D1 <> IN1 @ ULN2003`
+- `D1 @ WEMOS D1 <> IN2 @ ULN2003`
+- `D2 @ WEMOS D1 <> IN3 @ ULN2003`
+- `D3 @ WEMOS D1 <> IN4 @ ULN2003`
 
 ## Firmware
 
