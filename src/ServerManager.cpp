@@ -55,14 +55,14 @@ void							ServerManager::start						( )
 		serverPtr_->listen(port_) ;
 
 		serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onFile, this)) ;
-		// serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
+		// serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onTime, this)) ;
 
 		serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onIndex, this)) ;
-		// serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
+		// serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onTime, this)) ;
 		serverPtr_->addPath("/status", HttpPathDelegate(&ServerManager::onStatus, this)) ;
-		serverPtr_->addPath("/current_time", HttpPathDelegate(&ServerManager::onCurrentTime, this)) ;
-		serverPtr_->addPath("/rule", HttpPathDelegate(&ServerManager::onRule, this)) ;
-		serverPtr_->addPath("/task", HttpPathDelegate(&ServerManager::onTask, this)) ;
+		serverPtr_->addPath("/time", HttpPathDelegate(&ServerManager::onTime, this)) ;
+		serverPtr_->addPath("/rules", HttpPathDelegate(&ServerManager::onRules, this)) ;
+		serverPtr_->addPath("/tasks", HttpPathDelegate(&ServerManager::onTasks, this)) ;
 
 		// Serial.println(WifiStation.getIP()) ;
 
@@ -158,7 +158,7 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 
 }
 
-void							ServerManager::onCurrentTime				(			HttpRequest&				aRequest,
+void							ServerManager::onTime				(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
 
@@ -183,7 +183,7 @@ void							ServerManager::onCurrentTime				(			HttpRequest&				aRequest,
 
 }
 
-void							ServerManager::onRule						(			HttpRequest&				aRequest,
+void							ServerManager::onRules						(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
 
@@ -214,13 +214,13 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 				JsonObject&		ruleObject										=		ruleArray.createNestedObject() ;
 
 				ruleObject["id"]												=		(int)rule.getId() ;
-				ruleObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+				ruleObject["type"]												=		(String)Rule::StringFromType(rule.getType()) ;
 
 				switch (rule.getType())
 				{
 
 					case Rule::Type::Time:
-						ruleObject["time"]										=		(String)rule.getTime().getString() ;
+						ruleObject["time"]										=		(String)rule.getTime().getString(CalendarDate::Format::Time) ;
 						break ;
 
 					case Rule::Type::Interval:
@@ -233,7 +233,10 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 				}
 
-				ruleObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
+				if (rule.getPreviousExecutionTime().isDefined())
+				{
+					ruleObject["previous_execution_time"]						=		(String)CalendarDate::Time(rule.getPreviousExecutionTime()).getString(CalendarDate::Format::DateTime) ;
+				}
 
 			}
 			
@@ -254,13 +257,13 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 				const Rule&		rule 											=		taskManagerPtr_->accessRuleWithId(id) ;
 
 				JSONObject["id"]												=		(int)rule.getId() ;
-				JSONObject["type"]												=		(String)Rule::getStringOfType(rule.getType()) ;
+				JSONObject["type"]												=		(String)Rule::StringFromType(rule.getType()) ;
 
 				switch (rule.getType())
 				{
 
 					case Rule::Type::Time:
-						JSONObject["time"]										=		(String)rule.getTime().getString() ;
+						JSONObject["time"]										=		(String)rule.getTime().getString(CalendarDate::Format::Time) ;
 						break ;
 
 					case Rule::Type::Interval:
@@ -273,7 +276,10 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 
 				}
 
-				JSONObject["previous_execution_time"]							=		(String)rule.getPreviousExecutionTime().getString() ;
+				if (rule.getPreviousExecutionTime().isDefined())
+				{
+					JSONObject["previous_execution_time"]						=		(String)CalendarDate::Time(rule.getPreviousExecutionTime()).getString(CalendarDate::Format::DateTime) ;
+				}
 
 			}
 
@@ -302,60 +308,84 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 		}
 		else
 		{
-
 			id 																	=		taskManagerPtr_->getNextRuleId() ;
-
 		}
 
-		// TBI
+		String					ruleTypeString									=		aRequest.getPostParameter("type", "") ;
 
-		// String					executionTimeString								=		aRequest.getPostParameter("execution_time", "") ;
+		if (ruleTypeString != "")
+		{
 
-		// if (executionTimeString != "")
-		// {
+			Rule::Type			ruleType 										=		Rule::TypeFromString(ruleTypeString) ;
 
-		// 	Time 				executionTime 									=		Time::Parse(executionTimeString) ;
+			switch (ruleType)
+			{
 
-		// 	if (!executionTime.isDefined())
-		// 	{
-		// 		return aResponse.badRequest() ;
-		// 	}
+				case Rule::Type::Time:
+				{
 
-		// 	if (!taskManagerPtr_->addRule(Rule(id, executionTime)))
-		// 	{
-		// 		return aResponse.badRequest() ;
-		// 	}	
-		
-		// }
-		// else
-		// {
+					String		calendarDateString								=		aRequest.getPostParameter("time", "") ;
 
-		// 	if (!taskManagerPtr_->addImmediateRule())
-		// 	{
-		// 		return aResponse.badRequest() ;
-		// 	}
+					Serial.println(calendarDateString) ;
 
-		// }
+					if (calendarDateString == "")
+					{
+						return aResponse.badRequest() ;
+					}
+
+					CalendarDate calendarDate 									=		CalendarDate::Parse(calendarDateString) ;
+
+					Serial.println(calendarDate.getString()) ;
+
+					if (!calendarDate.isDefined())
+					{
+						return aResponse.badRequest() ;
+					}
+
+					if (!taskManagerPtr_->addRule(Rule::AtTime(id, calendarDate)))
+					{
+						return aResponse.badRequest() ;
+					}
+					
+					break ;
+
+				}
+
+				// case Rule::Type::Interval: // TBI
+				// {
+				// 	break ;
+				// }
+
+				default:
+					return aResponse.badRequest() ;
+
+			}
+
+		}
+		else
+		{
+			return aResponse.badRequest() ;
+		}
 
 	}
 	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
 	{
 
-		String					idString										=		aRequest.getQueryParameter("id", "") ;
-		
-		if (idString == "")
+		String					ruleIdString									=		aRequest.getQueryParameter("id", "") ;
+
+		if (ruleIdString == "")
 		{
 			return aResponse.badRequest() ;
 		}
 
-		uint					id 												=		idString.toInt() ;
+		uint					ruleId											=		ruleIdString.toInt() ;
 
-		if (id == 0)
+		if (ruleId == 0)
 		{
 			return aResponse.badRequest() ;
 		}
 
-		if (!taskManagerPtr_->removeRuleWithId(id))
+		if (!taskManagerPtr_->removeRuleWithId(ruleId))
 		{
 			return aResponse.badRequest() ;
 		}
@@ -363,14 +393,12 @@ void							ServerManager::onRule						(			HttpRequest&				aRequest,
 	}
 	else
 	{
-
 		aResponse.badRequest() ;
-
 	}
 
 }
 
-void							ServerManager::onTask						(			HttpRequest&				aRequest,
+void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
 
@@ -463,9 +491,7 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 		}
 		else
 		{
-
 			id 																	=		taskManagerPtr_->getNextTaskId() ;
-
 		}
 
 		String					executionTimeString								=		aRequest.getPostParameter("execution_time", "") ;
@@ -500,21 +526,21 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
 	{
 
-		String					idString										=		aRequest.getQueryParameter("id", "") ;
+		String					taskIdString									=		aRequest.getQueryParameter("id", "") ;
 		
-		if (idString == "")
+		if (taskIdString == "")
 		{
 			return aResponse.badRequest() ;
 		}
 
-		uint					id 												=		idString.toInt() ;
+		uint					taskId											=		taskIdString.toInt() ;
 
-		if (id == 0)
+		if (taskId == 0)
 		{
 			return aResponse.badRequest() ;
 		}
 
-		if (!taskManagerPtr_->removeTaskWithId(id))
+		if (!taskManagerPtr_->removeTaskWithId(taskId))
 		{
 			return aResponse.badRequest() ;
 		}
@@ -522,9 +548,7 @@ void							ServerManager::onTask						(			HttpRequest&				aRequest,
 	}
 	else
 	{
-
 		aResponse.badRequest() ;
-
 	}
 
 }

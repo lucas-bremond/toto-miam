@@ -170,7 +170,29 @@ Rule							Rule::AtInterval							(	const 	uint&						anId,
 
 }
 
-String							Rule::getStringOfType						(	const 	Rule::Type&					aType								)
+Rule::Type						Rule::TypeFromString						(	const 	String&						aString								)
+{
+
+	if (aString == "Undefined")
+	{
+		return Rule::Type::Undefined ;
+	}
+
+	if (aString == "Time")
+	{
+		return Rule::Type::Time ;
+	}
+
+	if (aString == "Interval")
+	{
+		return Rule::Type::Interval ;
+	}
+
+	return Rule::Type::Undefined ;
+
+}
+
+String							Rule::StringFromType						(	const 	Rule::Type&					aType								)
 {
 
 	switch (aType)

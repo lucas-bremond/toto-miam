@@ -19,6 +19,12 @@ a:hover {
   border: 1px solid #fff;
 }
 
+table thead tr th,
+table tbody tr td
+{
+  text-align: left;
+}
+
 
 /*
  * Base structure

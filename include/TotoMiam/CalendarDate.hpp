@@ -4,9 +4,9 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/CalendarDate.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+///	@file						TotoMiam/CalendarDate.hpp
+///	@author						Lucas Bremond <lucas@axelspace.com>
+///	@date						9 Oct 2016
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,17 +33,27 @@ class CalendarDate
 
 	public:
 
-								CalendarDate 								( ) ;
+		enum class Format
+		{
 
-								CalendarDate 								(	const 	int16_t&					aYear,
-																				const 	int8_t&						aMonth,
-																				const 	int8_t&						aDay,
-																				const 	int8_t&						anHourCount,
-																				const 	int8_t&						aMinuteCount,
-																				const 	int8_t&						aSecondCount						) ;
+			Undefined,
+			DateTime,
+			Date,
+			Time
 
-		bool					operator ==									(	const 	CalendarDate&				aCalendarDate 						) const ;
-		bool					operator !=									(	const 	CalendarDate&				aCalendarDate 						) const ;
+		} ;
+
+								CalendarDate								( ) ;
+
+								CalendarDate								(	const	int16_t&					aYear,
+																				const	int8_t&						aMonth,
+																				const	int8_t&						aDay,
+																				const	int8_t&						anHourCount,
+																				const	int8_t&						aMinuteCount,
+																				const	int8_t&						aSecondCount						) ;
+
+		bool					operator ==									(	const	CalendarDate&				aCalendarDate						) const ;
+		bool					operator !=									(	const	CalendarDate&				aCalendarDate						) const ;
 
 		bool					isDefined									( ) const ;
 
@@ -54,20 +64,20 @@ class CalendarDate
 		int8_t					getMinutes									( ) const ;
 		int8_t					getSeconds									( ) const ;
 
-		String					getString									( ) const ;
+		String					getString									(	const	CalendarDate::Format&		aFormat								=		CalendarDate::Format::DateTime ) const ;
 
-		void					setYear										( 	const 	int16_t&					aYearCount							) ;
-		void					setMonth									( 	const 	int8_t&						aMonthCount							) ;
-		void					setDay										( 	const 	int8_t&						aDayCount							) ;
-		void					setHours									( 	const 	int8_t&						aHourCount							) ;
-		void					setMinutes									( 	const 	int8_t&						aMinuteCount						) ;
-		void					setSeconds									( 	const 	int8_t&						aSecondCount						) ;
+		void					setYear										(	const	int16_t&					aYearCount							) ;
+		void					setMonth									(	const	int8_t&						aMonthCount							) ;
+		void					setDay										(	const	int8_t&						aDayCount							) ;
+		void					setHours									(	const	int8_t&						aHourCount							) ;
+		void					setMinutes									(	const	int8_t&						aMinuteCount						) ;
+		void					setSeconds									(	const	int8_t&						aSecondCount						) ;
 
-		static CalendarDate 	Undefined									( ) ;
+		static CalendarDate		Undefined									( ) ;
 
-		static CalendarDate 	Time										(	const 	TotoMiam::Time&				aTime 								) ;
+		static CalendarDate		Time										(	const	TotoMiam::Time&				aTime								) ;
 
-		static CalendarDate		Parse										( 	const 	String&						aString								) ;
+		static CalendarDate		Parse										(	const	String&						aString								) ;
 
 	private:
 

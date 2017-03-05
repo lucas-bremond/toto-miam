@@ -2,13 +2,15 @@ $(document).ready
 (
 	function ()
 	{
+
+		updateVersion() ;
 	
 		(
 			function worker ()
 			{
 				$.getJSON
 				(
-					'/task',
+					'/tasks',
 					function (data)
 					{
 						

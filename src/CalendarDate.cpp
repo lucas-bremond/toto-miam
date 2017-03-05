@@ -93,18 +93,55 @@ int8_t							CalendarDate::getSeconds					( ) const
 	return seconds_ ;
 }
 
-String							CalendarDate::getString						( ) const
+String							CalendarDate::getString						(	const	CalendarDate::Format&		aFormat								) const
 {
 
 	// Serial.println("CalendarDate::getString") ;
 	
 	// 2000-01-01 00:00:00 [UTC]
 
-	char buffer[25] ;
-	
-	sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d [UTC]", year_, month_, day_, hours_, minutes_, seconds_) ;	
+	switch (aFormat)
+	{
 
-	return String(buffer) ;
+		case CalendarDate::Format::DateTime:
+		{
+
+			char				buffer[25] ;
+	
+			sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d [UTC]", year_, month_, day_, hours_, minutes_, seconds_) ;	
+
+			return String(buffer) ;
+
+		}
+
+		case CalendarDate::Format::Date:
+		{
+
+			char				buffer[10] ;
+	
+			sprintf(buffer, "%04d-%02d-%02d", year_, month_, day_) ;	
+
+			return String(buffer) ;
+
+		}
+
+		case CalendarDate::Format::Time:
+		{
+
+			char				buffer[14] ;
+	
+			sprintf(buffer, "%02d:%02d:%02d [UTC]", hours_, minutes_, seconds_) ;	
+
+			return String(buffer) ;
+
+		}
+
+		default:
+			break ;
+
+	}
+
+	return "" ;
 
 }
 
@@ -205,7 +242,7 @@ CalendarDate					CalendarDate::Time							(	const 	TotoMiam::Time&				aTime 				
 CalendarDate					CalendarDate::Parse							( 	const 	String&						aString								)
 {
 
-	// Serial.println("CalendarDate::Parse") ;
+	Serial.println("CalendarDate::Parse") ;
 
 	// YYYY-MM-DD hh:mm:ss [UTC]
 
@@ -224,14 +261,14 @@ CalendarDate					CalendarDate::Parse							( 	const 	String&						aString							
 
 	String 						timeScale										=		aString.substring(20, 25) ;
 
-	// Serial.println(aString) ;
-	// Serial.println(year) ;
-	// Serial.println(month) ;
-	// Serial.println(day) ;
-	// Serial.println(hours) ;
-	// Serial.println(minutes) ;
-	// Serial.println(seconds) ;
-	// Serial.println(timeScale) ;
+	Serial.println(aString) ;
+	Serial.println(year) ;
+	Serial.println(month) ;
+	Serial.println(day) ;
+	Serial.println(hours) ;
+	Serial.println(minutes) ;
+	Serial.println(seconds) ;
+	Serial.println(timeScale) ;
 
 	if ((year < 1970) || (year > 2050))
 	{
@@ -268,7 +305,7 @@ CalendarDate					CalendarDate::Parse							( 	const 	String&						aString							
 		return CalendarDate::Undefined() ;
 	}
 
-	return CalendarDate(seconds, minutes, hours, day, month, year) ;
+	return CalendarDate(year, month, day, hours, minutes, seconds) ;
 
 }
 

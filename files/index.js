@@ -2,33 +2,15 @@ $(document).ready
 (
 	function ()
 	{
+
+		updateVersion() ;
 	
 		(
 			function worker ()
 			{
 				$.getJSON
 				(
-					'/status',
-					function (data)
-					{
-						
-						console.log(data) ;
-
-						$('span[name="version"]').html(data['version']) ;
-						
-						setTimeout(worker, 5000) ;
-
-					}
-				) ;
-			}
-		)() ;
-
-		(
-			function worker ()
-			{
-				$.getJSON
-				(
-					'/current_time',
+					'/time',
 					function (data)
 					{
 
@@ -55,7 +37,7 @@ $(document).ready
 
 				$.post
 				(
-					'/task',
+					'/tasks',
 					function (data)
 					{
 						
@@ -81,7 +63,7 @@ $(document).ready
 				(
 					function ( )
 					{
-    					$('button[action="add-immediate-task"]').prop('disabled', false) ;
+						$('button[action="add-immediate-task"]').prop('disabled', false) ;
 					}
 				) ;
 

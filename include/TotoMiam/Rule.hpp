@@ -64,7 +64,8 @@ class Rule
 																				const 	Duration&					anInterval,
 																				const 	Duration&					aTaskDuration						=	Duration::Seconds(3) ) ;
 
-		static String			getStringOfType								(	const 	Rule::Type&					aType								) ;
+		static Rule::Type		TypeFromString								(	const 	String&						aString								) ;
+		static String			StringFromType								(	const 	Rule::Type&					aType								) ;
 
 	private:
 

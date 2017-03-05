@@ -2,4 +2,6 @@
 
 current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-(cd ${current_directory}/.. && make flash)
+${current_directory}/clean.sh
+
+(cd ${current_directory}/.. && make -j 8 flash)

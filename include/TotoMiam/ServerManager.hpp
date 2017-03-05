@@ -57,13 +57,13 @@ class ServerManager
 		void					onStatus									(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 
-		void					onCurrentTime								(			HttpRequest&				aRequest,
+		void					onTime										(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 
-		void					onRule										(			HttpRequest&				aRequest,
+		void					onRules										(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 
-		void					onTask										(			HttpRequest&				aRequest,
+		void					onTasks										(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							) ;
 
 } ;

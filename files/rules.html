@@ -14,6 +14,7 @@
 	<title>Toto | Miam</title>
 
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0-RC1/css/bootstrap-datepicker.min.css" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
 
@@ -64,7 +65,9 @@
 								<tr>
 									<th>#</th>
 									<th>Type</th>
+									<th>Rule</th>
 									<th>Previous Execution Time</th>
+									<th></th>
 								</tr>
 							</thead>
 
@@ -76,11 +79,26 @@
 
 					</div>
 
+					<div class="controller">
+
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="input-group">
+									<input name="time" type="text" class="form-control" placeholder="HH:MM:SS">
+									<span class="input-group-btn">
+										<button action="add-rule" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+									</span>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+
 				</div>
 
 				<div class="mastfoot">
 					<div class="inner">
-						<p>Version <span class="version">1.0.0</span></p>
+						<p>Version <span name="version">-.-.-</span></p>
 					</div>
 				</div>
 
@@ -90,11 +108,11 @@
 
 	</div>
 
-	<!-- Bootstrap core JavaScript
-	================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0-RC1/js/bootstrap-datepicker.min.js"></script>
+	
+	<script src="common.js"></script>
 	<script src="rules.js"></script>
 
 </body>

@@ -32,7 +32,10 @@ SMING_HOME = ./thirdparty/Sming/Sming
 # COM_PORT = /dev/tty.usbserial
 # COM_PORT = /dev/tty.SLAB_USBtoUART
 # COM_PORT = /dev/tty.wchusbserialfd120
-COM_PORT = /dev/cu.wchusbserialfa130
+# COM_PORT = /dev/cu.wchusbserialfa130
+COM_PORT = /dev/tty.wchusbserialfa130
+
+# If serial not found: sudo easy_install pyserial
 
 ## Com port speed
 # COM_SPEED	= 115200
