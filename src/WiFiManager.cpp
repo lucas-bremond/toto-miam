@@ -49,8 +49,6 @@ void							WiFiManager::setMode						(	const 	WiFiManager::Mode&			aMode								
 void							WiFiManager::start							( )
 {
 
-	// Serial.println("Starting WiFi Manager...") ;
-
 	if (this->isActive())
 	{
 		this->stop() ;
@@ -70,8 +68,6 @@ void							WiFiManager::start							( )
 			SSID_																=		applicationStoragePtr_->accessSSID() ;
 			password_															=		applicationStoragePtr_->accessPassword() ;
 
-			// Serial.println("SSID = " + SSID_) ;
-		
 		}
 
 		WifiStation.config(SSID_, password_) ;
@@ -82,19 +78,13 @@ void							WiFiManager::start							( )
 
 	if (mode_ == WiFiManager::Mode::AccessPoint)
 	{
-
 		connectionSuccessHandler_() ;
-
 	}
-
-	// Serial.println("Starting WiFi Manager [OK]") ;
 
 }
 
 void							WiFiManager::stop							( )
 {
-
-	// Serial.println("Stopping WiFi Manager...") ;
 
 	if (!this->isActive())
 	{
@@ -112,8 +102,6 @@ void							WiFiManager::stop							( )
 	}
 
 	active_																		=		false ;
-
-	// Serial.println("Stopping WiFi Manager [OK]") ;
 
 }
 
@@ -135,8 +123,6 @@ void							WiFiManager::setConnectionFailureHandler	(			Delegate<void()>			aDele
 void							WiFiManager::startmDNS						( )
 {
 
-	// Serial.println("Starting mDNS...") ;
-
 	struct mdns_info*			info											=		(struct mdns_info*)os_zalloc(sizeof(struct mdns_info)) ;
 	
 	info->host_name																=		(char*) "totomiam" ;
@@ -147,14 +133,10 @@ void							WiFiManager::startmDNS						( )
 
 	espconn_mdns_init(info) ;
 
-	// Serial.println("Starting mDNS [OK]") ;
-
 }
 
 void							WiFiManager::onConnectionSuccess			( )
 {
-
-	// Serial.println("WiFi connection successful...") ;
 
 	if (!active_)
 	{
@@ -172,8 +154,6 @@ void							WiFiManager::onConnectionSuccess			( )
 
 void							WiFiManager::onConnectionFailure			( )
 {
-
-	// Serial.println("WiFi connection failed...") ;
 
 	if (!active_)
 	{

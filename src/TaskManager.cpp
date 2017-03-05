@@ -10,7 +10,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// #include <Libraries/Servo/ServoChannel.h>
 // #include <TotoMiam/StepperMotorController.hpp>
 
 // #include <TotoMiam/AppSettings.hpp>
@@ -32,9 +31,6 @@ namespace TotoMiam
 									ruleCountLimit_(10),
 									taskCountLimit_(10),
 									currentTaskPtr_(nullptr)
-									// motorTimerLoopMs_(10),
-									// motorCount_(0),
-									// motorMaxCount_(0)
 {
 
 }
@@ -47,8 +43,6 @@ bool							TaskManager::isActive						( ) const
 void							TaskManager::start							( )
 {
 
-	// Serial.println("Starting Task Manager...") ;
-
 	if (this->isActive())
 	{
 		this->stop() ;
@@ -56,80 +50,28 @@ void							TaskManager::start							( )
 
 	active_																		=		true ;
 
-	// ledPWM.initialize();
-
-	// procTimer.initializeMs(10, doPWM).start();
-
-	// motorDriver_.initialize() ;
-
-	// motorTimer_.initializeMs(motorTimerLoopMs_, Delegate<void()>(&TaskManager::doManageMotor, this)) ; // TBM param
-	
-	// motorTimer_.start() ;
-
-	// servoChannelPtr_															=		new(ServoChannel) ;
-
-	// servoChannelPtr_->attach(D0) ;
-
-	// servoChannelPtr_->setDegree(1.0) ;
-
 	this->load() ;
 
 	this->addRule(Rule::AtTime(1, CalendarDate(2016, 12, 11, 20, 30, 0), Duration::Seconds(60))) ;
 	this->addRule(Rule::AtTime(2, CalendarDate(2016, 12, 11, 7, 30, 0), Duration::Seconds(60))) ;
 
-	// this->addRule(Rule::AtInterval(1, Duration::Seconds(20), Duration::Seconds(3))) ;
-	// this->addRule(Rule::AtInterval(2, Duration::Seconds(30), Duration::Seconds(3))) ;
-
-	// this->addTask(Task(1, Time::CalendarDate(CalendarDate(2016, 12, 10, 20, 30, 0)))) ;
-	// this->addTask(Task(2, Time::CalendarDate(CalendarDate(2016, 12, 11, 7, 30, 0)))) ;
-
-	// this->addTask(Task(3, Time::CalendarDate(CalendarDate(2016, 12, 11, 20, 30, 0)))) ;
-	// this->addTask(Task(4, Time::CalendarDate(CalendarDate(2016, 12, 12, 7, 30, 0)))) ;
-
-	// this->addTask(Task(5, Time::CalendarDate(CalendarDate(2016, 12, 12, 20, 30, 0)))) ;
-	// this->addTask(Task(6, Time::CalendarDate(CalendarDate(2016, 12, 13, 7, 30, 0)))) ;
-
-	// this->addTask(Task(1, Time::Now() + Duration::Seconds(10))) ;
-	// this->addTask(Task(2, Time::Now() + Duration::Seconds(20))) ;
-	// this->addTask(Task(3, Time::Now() + Duration::Seconds(30))) ;
-	// this->addTask(Task(4, Time::Now() + Duration::Seconds(40))) ;
-
-	// this->addTask(Task(1, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(2, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(3, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(4, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(5, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(6, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(7, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(8, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(9, Time::Now() + Duration::Seconds(3600))) ;
-	// this->addTask(Task(10, Time::Now() + Duration::Seconds(3600))) ;
-
 	timer_.initializeMs(1000, Delegate<void()>(&TaskManager::onManage, this)) ; // TBM param
 	
 	timer_.start() ;
-
-	// Serial.println("Starting Task Manager [OK]") ;
 
 }
 
 void							TaskManager::stop							( )
 {
 
-	// Serial.println("Stopping Task Manager...") ;
-
 	if (!this->isActive())
 	{
 		return ;
 	}
 
-	// motorTimer_.stop() ;
-	
 	timer_.stop() ;
 
 	active_																		=		false ;
-
-	// Serial.println("Stopping Task Manager [OK]") ;
 
 }
 
@@ -143,8 +85,6 @@ bool							TaskManager::hasRuleWithId					(	const	uint&						aRuleId								) co
 
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		const Rule&				rule 											=		rules_[idx] ;
 
@@ -165,8 +105,6 @@ bool							TaskManager::hasTaskWithId					(	const	uint&						aTaskId								) co
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		// wdt_feed() ;
-
 		const Task&				task 											=		tasks_[idx] ;
 
 		if (task.getId() == aTaskId)
@@ -186,8 +124,6 @@ const Rule&						TaskManager::accessRuleWithId				(	const	uint&						aRuleId				
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		// wdt_feed() ;
-
 		const Rule&				rule 											=		rules_[idx] ;
 
 		if (rule.getId() == aRuleId)
@@ -204,8 +140,6 @@ const Task&						TaskManager::accessTaskWithId				(	const	uint&						aTaskId				
 
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		const Task&				task 											=		tasks_[idx] ;
 
@@ -236,8 +170,6 @@ uint							TaskManager::getNextRuleId					( ) const
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
 
-		// wdt_feed() ;
-
 		uint					ruleId 											=		rules_[idx].getId() ;
 
 		if (nextRuleId <= ruleId)
@@ -259,8 +191,6 @@ uint							TaskManager::getNextTaskId					( ) const
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
 
-		// wdt_feed() ;
-
 		uint					taskId 											=		tasks_[idx].getId() ;
 
 		if (nextTaskId <= taskId)
@@ -279,8 +209,6 @@ bool							TaskManager::addRule						(	const	Rule&						aRule								)
 
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		if (rules_[idx].getId() == aRule.getId())
 		{
@@ -309,8 +237,6 @@ bool							TaskManager::addTask						(	const	Task&						aTask								)
 
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		if (tasks_[idx].getId() == aTask.getId())
 		{
@@ -405,7 +331,7 @@ void							TaskManager::load							( )
 	if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
 	{
 
-		
+		// TBC...
 	
 	}
 
@@ -417,7 +343,7 @@ void							TaskManager::save							( )
 	if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
 	{
 
-		
+		// TBC...
 	
 	}
 
@@ -426,16 +352,12 @@ void							TaskManager::save							( )
 void							TaskManager::onManage						( )
 {
 
-	// Serial.println("Managing tasks...") ;
-
 	Time 						currentTime										=		Time::Now() ;
 
 	// Executing tasks
 
 	for (uint idx = 0; idx < tasks_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		Task&					task 											=		tasks_[idx] ;
 
@@ -461,8 +383,6 @@ void							TaskManager::onManage						( )
 
 	for (uint idx = 0; idx < rules_.size(); ++idx)
 	{
-
-		// wdt_feed() ;
 
 		Rule&					rule 											=		rules_[idx] ;
 
@@ -500,47 +420,6 @@ void							TaskManager::onManage						( )
 		}
 
 	}
-
-	// Serial.println("Managing tasks [OK]") ;
-
-}
-
-void							TaskManager::doManageMotor					( )
-{
-
-	// if ((currentTaskPtr_ != nullptr) && (motorCount_ < motorMaxCount_))
-	// {
-
-	// 	// Serial.println(motorCount_) ;
-
-	// 	digitalWrite(PIN_LED, true) ;
-		
-	// 	motorDriver_.analogWrite(PIN_MOTOR_Am, 250) ; // TBM param
-	// 	// motorDriver_.setDuty(PIN_MOTOR_Am, 100) ; // TBM param
-
-	// 	motorCount_++ ;
-
-	// } else {
-
-	// 	if (currentTaskPtr_ != nullptr)
-	// 	{
-
-	// 		motorDriver_.analogWrite(PIN_MOTOR_Am, 0) ;
-
-	// 		digitalWrite(PIN_LED, false) ;
-
-	// 		motorCount_															=		0 ;
-	// 		motorMaxCount_														=		0 ;
-
-	// 		currentTaskPtr_->setStatus(Task::Status::Completed) ;
-
-	// 		currentTaskPtr_														=		nullptr ;
-
-	// 		Serial.println("Executing task [OK]") ;
-
-	// 	}
-
-	// }
 
 }
 

@@ -77,22 +77,12 @@ class TaskManager
 
 		Timer					timer_ ;
 
-		// DriverPWM				motorDriver_ ;
-		// Timer 					motorTimer_ ;
-		// uint					motorTimerLoopMs_ ;
-
 		Task*					currentTaskPtr_ ;
-		// uint					motorCount_ ;
-		// uint					motorMaxCount_ ;
-
-		// ServoChannel*			servoChannelPtr_ ;
 
 		void					load										( ) ;
 		void					save										( ) ;
 
 		void					onManage									( ) ;
-
-		void					doManageMotor								( ) ;
 
 } ;
 

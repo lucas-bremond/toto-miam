@@ -40,8 +40,6 @@ bool							ServerManager::isActive						( ) const
 void							ServerManager::start						( )
 {
 
-	// Serial.println("Starting Server Manager...") ;
-
 	if (this->isActive())
 	{
 		this->stop() ;
@@ -55,27 +53,19 @@ void							ServerManager::start						( )
 		serverPtr_->listen(port_) ;
 
 		serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onFile, this)) ;
-		// serverPtr_->setDefaultHandler(HttpPathDelegate(&ServerManager::onTime, this)) ;
 
 		serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onIndex, this)) ;
-		// serverPtr_->addPath("/", HttpPathDelegate(&ServerManager::onTime, this)) ;
 		serverPtr_->addPath("/status", HttpPathDelegate(&ServerManager::onStatus, this)) ;
 		serverPtr_->addPath("/time", HttpPathDelegate(&ServerManager::onTime, this)) ;
 		serverPtr_->addPath("/rules", HttpPathDelegate(&ServerManager::onRules, this)) ;
 		serverPtr_->addPath("/tasks", HttpPathDelegate(&ServerManager::onTasks, this)) ;
 
-		// Serial.println(WifiStation.getIP()) ;
-
 	}
-
-	// Serial.println("Starting Server Manager [OK]") ;
 
 }
 
 void							ServerManager::stop							( )
 {
-
-	// Serial.println("Stopping Server Manager...") ;
 
 	if (!this->isActive())
 	{
@@ -85,8 +75,6 @@ void							ServerManager::stop							( )
 	delete serverPtr_ ;
 
 	serverPtr_																	=		nullptr ;
-
-	// Serial.println("Stopping Server Manager [OK]") ;
 
 }
 
@@ -118,9 +106,7 @@ void							ServerManager::onFile						(			HttpRequest&				aRequest,
 
 	if (file[0] == '.')
 	{
-
 		aResponse.forbidden() ;
-		
 	}
 	else
 	{
@@ -151,9 +137,7 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 	}
 	else
 	{
-
 		aResponse.badRequest() ;
-
 	}
 
 }
@@ -176,9 +160,7 @@ void							ServerManager::onTime				(			HttpRequest&				aRequest,
 	}
 	else
 	{
-
 		aResponse.badRequest() ;
-
 	}
 
 }

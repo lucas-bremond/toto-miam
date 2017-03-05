@@ -96,8 +96,6 @@ int8_t							CalendarDate::getSeconds					( ) const
 String							CalendarDate::getString						(	const	CalendarDate::Format&		aFormat								) const
 {
 
-	// Serial.println("CalendarDate::getString") ;
-	
 	// 2000-01-01 00:00:00 [UTC]
 
 	switch (aFormat)
@@ -194,8 +192,6 @@ CalendarDate 					CalendarDate::Undefined						( )
 
 CalendarDate					CalendarDate::Time							(	const 	TotoMiam::Time&				aTime 								)
 {
-
-	// Serial.println("CalendarDate::Time") ;
 
 	CalendarDate 				calendarDate ;
 
