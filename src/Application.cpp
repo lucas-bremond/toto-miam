@@ -54,6 +54,8 @@ void							Application::start							( )
 	// set timezone hourly difference to UTC
 	// SystemClock.setTimeZone(2);
 
+	Serial.println("Starting...");
+
 	// Status timer setup
 
 	if (statusTimerEnabled_)

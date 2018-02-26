@@ -153,12 +153,6 @@ gen_udivsi3(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c))
 {
   return 0;
 }
-static inline rtx gen_divsf3                   (rtx, rtx, rtx);
-static inline rtx
-gen_divsf3(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c))
-{
-  return 0;
-}
 static inline rtx gen_modsi3                   (rtx, rtx, rtx);
 static inline rtx
 gen_modsi3(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c))
@@ -168,12 +162,6 @@ gen_modsi3(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c))
 static inline rtx gen_umodsi3                  (rtx, rtx, rtx);
 static inline rtx
 gen_umodsi3(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b), rtx ARG_UNUSED (c))
-{
-  return 0;
-}
-static inline rtx gen_sqrtsf2                  (rtx, rtx);
-static inline rtx
-gen_sqrtsf2(rtx ARG_UNUSED (a), rtx ARG_UNUSED (b))
 {
   return 0;
 }

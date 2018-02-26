@@ -41,9 +41,13 @@ Drive Module Board:
 
 ### Setup
 
+#### Driver
+
+On macOS High Sierra: https://blog.sengotta.net/signed-mac-os-driver-for-winchiphead-ch340-serial-bridge/
+
 #### Configuration
 
-Create a `./files/Setting.json` configuration file with the following content:
+Create a `./files/settings.json` configuration file with the following content:
 
 ```json
 {
@@ -70,7 +74,7 @@ make flash
 
 ## Copyright
 
-(c) 2016 Lucas Brémond
+(c) 2016 - 2018 Lucas Brémond
 
 Citing Peter Andersson, author of the great [SPIFFS](https://github.com/pellepl/spiffs) library:
 

@@ -21,7 +21,7 @@ extern "C" {
 
 	// UART config
 
-	#define SERIAL_BAUD_RATE 115200
+	// #define SERIAL_BAUD_RATE 115200
 
 	// Pins
 

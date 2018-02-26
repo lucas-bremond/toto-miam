@@ -4,7 +4,7 @@
    are permitted in any medium without royalty provided the copyright
    notice and this notice are preserved.  */
 ENTRY(_start)
-SEARCH_DIR("=/Volumes/esp-open-sdk/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/lib"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
+SEARCH_DIR("=/Volumes/case-sensitive/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/lib"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */

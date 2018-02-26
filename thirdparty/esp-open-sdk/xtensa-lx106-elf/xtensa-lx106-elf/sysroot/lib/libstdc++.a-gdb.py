@@ -19,8 +19,8 @@ import gdb
 import os
 import os.path
 
-pythondir = '/Volumes/esp-open-sdk/esp-open-sdk/xtensa-lx106-elf/share/gcc-4.8.5/python'
-libdir = '/Volumes/esp-open-sdk/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/lib'
+pythondir = '/Volumes/case-sensitive/esp-open-sdk/xtensa-lx106-elf/share/gcc-4.8.5/python'
+libdir = '/Volumes/case-sensitive/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/lib'
 
 # This file might be loaded when there is no current objfile.  This
 # can happen if the user loads it manually.  In this case we don't

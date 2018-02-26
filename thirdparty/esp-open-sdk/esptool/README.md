@@ -25,7 +25,7 @@ After installing, you will have `esptool.py` installed into the default Python e
 
 Manual installation allows you to run the latest development version from this repository.
 
-esptool.py depends on [pySerial](https://github.com/pyserial/pyserial#readme) for serial communication with the target device.
+esptool.py depends on [pySerial](https://github.com/pyserial/pyserial#readme) version 2.5 or newer for serial communication with the target device.
 
 If you choose to install esptool.py system-wide by running `python setup.py install`, then this will be taken care of automatically.
 
@@ -80,18 +80,28 @@ esptool.py elf2image --version=2 -o my_app-ota.bin my_app.elf
 The binaries from elf2image or make_image can be sent to the ESP8266 via the serial `write_flash` command:
 
 ```
-esptool.py write_flash 0x00000 my_app.elf-0x00000.bin 0x40000 my_app.elf-0x40000.bin
+esptool.py --port COM4 write_flash 0x00000 my_app.elf-0x00000.bin 0x40000 my_app.elf-0x40000.bin
 ```
 
 Or, for a "version 2" image, a single argument:
 
 ```
-esptool.py write_flash 0x1000 my_app-0x01000.bin
+esptool.py --port COM4 write_flash 0x1000 my_app-0x01000.bin
 ```
 
-The arguments are one or more pairs of offset (address) and file name. The file names created by elf2image include the flash offsets for version 1. For version 2, the bootloader and linker script you are using determines the flash offset.
+The --port argument specifies the serial port. This may take the form of something like COMx (Windows), /dev/ttyUSBx (Linux) or /dev/tty.usbserial (OS X) or similar names.
 
-See the [Flash Modes](#flash-modes) and [Troubleshooting](#troubleshooting) sections for more useful information about this command.
+The next arguments to write_flash are one or more pairs of offset (address) and file name. When generating "version 1" images, the file names created by elf2image include the flash offsets as part of the file name. For "version 2" images, the bootloader and linker script you are using determines the flash offset.
+
+You may need to specify arguments for [flash mode and flash size](#flash-modes) as well (flash size is autodetected in the recent versions and usually can be omitted). For example:
+
+```
+esptool.py --port /dev/ttyUSB0 write_flash --flash_mode qio --flash_size 32m 0x0 bootloader.bin 0x1000 my_app.bin
+```
+
+The [Flash Modes](#flash-modes) section below explains the meaning of these additional arguments.
+
+See the [Troubleshooting](#troubleshooting) section if the write_flash command is failing, or the flashed module fails to boot.
 
 ### Verifying flash
 
@@ -220,23 +230,29 @@ Note that some serial terminal programs (not esptool.py) will assert both RTS an
 
 `write_flash` and some other comands accept command line arguments to set flash mode, flash size and flash clock frequency. The ESP8266 needs correct mode, frequency and size settings in order to run correctly - although there is some flexibility.
 
+These arguments must appear after `write_flash` on the command line, for example:
+
+```
+esptool.py --port /dev/ttyUSB1 write_flash --flash_mode dio --flash_size 32m 0x0 bootloader.bin
+```
+
 When flashing at offset 0x0, the first sector of the ESP8266 flash is updated automatically using the arguments passed in.
 
 ### Flash Mode (--flash_mode, -fm)
 
 These set Quad Flash I/O or Dual Flash I/O modes. Valid values are `qio`, `qout`, `dio`, `dout`. The default is `qio`. This parameter can also be specified using the environment variable `ESPTOOL_FM`.
 
-Some ESP8266 modules, including the ESP-12E modules on some (not all) NodeMCU boards, are dual I/O and will only work with `--flash_mode dio`.
+Most boards use the default `qio`. Some ESP8266 modules, including the ESP-12E modules on some (not all) NodeMCU boards, are dual I/O and the firmware will only boot when flashed with `--flash_mode dio`.
 
 In `qio` mode, GPIOs 9 and 10 are used for SPI flash communications. If flash mode is set to `dio` then these pins are available for other purposes.
 
 ### Flash Size (--flash_size, -fs)
 
-Size of the SPI flash. Valid values are `4m`, `2m`, `8m`, `16m`, `32m`, `16m-c1`, `32m-c1`, `32m-c2` (megabits). The default is `4m` (4 megabits, 512 kilobytes.) This parameter can also be specified using the environment variable `ESPTOOL_FS`.
+Size of the SPI flash. Valid values are `4m`, `2m`, `8m`, `16m`, `32m`, `16m-c1`, `32m-c1`, `32m-c2` (megabits). For `write_flash` command, the default is `detect`, which tries to autodetect size based on SPI flash ID. If detection fails, older default of `4m` (4 megabits, 512 kilobytes) is used. This parameter can also be specified using the environment variable `ESPTOOL_FS`.
 
 The ESP8266 SDK stores WiFi configuration at the "end" of flash, and it finds the end using this size. However there is no downside to specifying a smaller flash size than you really have, as long as you don't need to write an image larger than the configured size.
 
-ESP-12, ESP-12E and ESP-12F modules (and boards that use them such as NodeMCU, HUZZAH, etc.) usually have at least 32 megabit (`32m` i.e. 4MB) flash. You can find the flash size by using the `flash_id` command and then looking up the ID from the output (see [Read SPI flash id](#read-spi-flash-id)).
+ESP-12, ESP-12E and ESP-12F modules (and boards that use them such as NodeMCU, HUZZAH, etc.) usually have at least 32 megabit (`32m` i.e. 4MB) flash. You can find the flash size by using the `flash_id` command and then looking up the ID from the output (see [Read SPI flash id](#read-spi-flash-id)). If `--flash_size=detect` (recent default) is used, this process is performed automatically by `esptool.py` itself.
 
 ### Flash Frequency (--flash_freq, -ff)
 
@@ -264,7 +280,7 @@ If you see errors like "Failed to connect to ESP8266" then your ESP8266 is proba
 
 If flashing fails with random errors part way through, retry with a lower baud rate.
 
-Power stability problems may also cause tihs (see [Insufficient Power](#insufficient-power).)
+Power stability problems may also cause this (see [Insufficient Power](#insufficient-power).)
 
 ### write_flash succeeds but ESP8266 doesn't run
 

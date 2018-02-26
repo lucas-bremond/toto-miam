@@ -1,6 +1,7 @@
 .DS_Store
 files/Settings.json
+ld
 out
 tmp
-thirdparty/Sming_gdb
-thirdparty/Sming.zip
+thirdparty/*
+!thirdparty/setup.sh

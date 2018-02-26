@@ -73,8 +73,14 @@ class WiFiManager
 
 		void					startmDNS									( ) ;
 
-		void					onConnectionSuccess							( ) ;
-		void					onConnectionFailure							( ) ;
+		void					onConnectionSuccess							(			IPAddress					anIPAddress,
+																						IPAddress					aMask,
+																						IPAddress					aGateway							) ;
+		
+		void					onConnectionFailure							(			String						aSsid,
+																						uint8_t						aSsidLength,
+																						uint8_t						*bssid,
+																						uint8_t						aReason								) ;
 
 } ;
 

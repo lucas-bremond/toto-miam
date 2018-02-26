@@ -59,8 +59,8 @@ Version 						Version::Current							( )
 	Version						version ;
 
 	version.major_																=		1 ;
-	version.minor_																=		1 ;
-	version.patch_																=		1 ;
+	version.minor_																=		2 ;
+	version.patch_																=		0 ;
 
 	return version ;
 

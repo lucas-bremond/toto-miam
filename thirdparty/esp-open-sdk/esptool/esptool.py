@@ -31,7 +31,7 @@ import tempfile
 import time
 
 
-__version__ = "1.2-dev"
+__version__ = "1.2"
 
 
 class ESPROM(object):
@@ -68,8 +68,8 @@ class ESPROM(object):
     ESP_FLASH_SECTOR = 0x1000
 
     def __init__(self, port=0, baud=ESP_ROM_BAUD):
-        self._port = serial.Serial(port)
-        self._slip_reader = slip_reader(port)
+        self._port = serial.serial_for_url(port)
+        self._slip_reader = slip_reader(self._port)
         # setting baud rate in a separate step is a workaround for
         # CH341 driver on some Linux versions (this opens at 9600 then
         # sets), shouldn't matter for other platforms/drivers. See
@@ -261,7 +261,6 @@ class ESPROM(object):
         self.write_reg(0x60000240, 0x0, 0xffffffff)
         self.write_reg(0x60000200, 0x10000000, 0xffffffff)
         flash_id = self.read_reg(0x60000240)
-        self.flash_finish(False)
         return flash_id
 
     """ Abuse the loader protocol to force flash to be left in write mode """
@@ -555,6 +554,7 @@ class CesantaFlasher(object):
     CMD_FLASH_WRITE = 1
     CMD_FLASH_READ = 2
     CMD_FLASH_DIGEST = 3
+    CMD_FLASH_ERASE_CHIP = 5
     CMD_BOOT_FW = 6
 
     def __init__(self, esp, baud_rate=0):
@@ -674,6 +674,18 @@ class CesantaFlasher(object):
         status_code = struct.unpack('<B', p)[0]
         if status_code != 0:
             raise FatalError('Boot failure, status: %x' % status_code)
+
+    def flash_erase_chip(self):
+        self._esp.write(struct.pack('<B', self.CMD_FLASH_ERASE_CHIP))
+        otimeout = self._esp._port.timeout
+        self._esp._port.timeout = 60
+        p = self._esp.read()
+        self._esp._port.timeout = otimeout
+        if len(p) != 1:
+            raise FatalError('Expected status, got: %s' % hexify(p))
+        status_code = struct.unpack('<B', p)[0]
+        if status_code != 0:
+            raise FatalError('Erase chip failure, status: %x' % status_code)
 
 
 def slip_reader(port):
@@ -822,7 +834,20 @@ def dump_mem(esp, args):
     print 'Done!'
 
 
+def detect_flash_size(esp, args):
+    if args.flash_size == 'detect':
+        flash_id = esp.flash_id()
+        size_id = flash_id >> 16
+        args.flash_size = {18: '2m', 19: '4m', 20: '8m', 21: '16m', 22: '32m'}.get(size_id)
+        if args.flash_size is None:
+            print 'Warning: Could not auto-detect Flash size (FlashID=0x%x, SizeID=0x%x), defaulting to 4m' % (flash_id, size_id)
+            args.flash_size = '4m'
+        else:
+            print 'Auto-detected Flash size:', args.flash_size
+
+
 def write_flash(esp, args):
+    detect_flash_size(esp, args)
     flash_mode = {'qio':0, 'qout':1, 'dio':2, 'dout': 3}[args.flash_mode]
     flash_size_freq = {'4m':0x00, '2m':0x10, '8m':0x20, '16m':0x30, '32m':0x40, '16m-c1': 0x50, '32m-c1':0x60, '32m-c2':0x70}[args.flash_size]
     flash_size_freq += {'40m':0, '26m':1, '20m':2, '80m': 0xf}[args.flash_freq]
@@ -833,6 +858,8 @@ def write_flash(esp, args):
     for address, argfile in args.addr_filename:
         image = argfile.read()
         argfile.seek(0)  # rewind in case we need it again
+        if address + len(image) > int(args.flash_size.split('m')[0]) * (1 << 17):
+            print 'WARNING: Unlikely to work as data goes beyond end of flash. Hint: Use --flash_size'
         # Fix sflash config data.
         if address == 0 and image[0] == '\xe9':
             print 'Flash params set to 0x%02x%02x' % (flash_mode, flash_size_freq)
@@ -932,8 +959,12 @@ def chip_id(esp, args):
 
 
 def erase_flash(esp, args):
+    flasher = CesantaFlasher(esp, args.baud)
     print 'Erasing flash (this may take a while)...'
-    esp.flash_erase()
+    t = time.time()
+    flasher.flash_erase_chip()
+    t = time.time() - t
+    print 'Erase took %.1f seconds' % t
 
 
 def run(esp, args):
@@ -942,6 +973,7 @@ def run(esp, args):
 
 def flash_id(esp, args):
     flash_id = esp.flash_id()
+    esp.flash_finish(False)
     print 'Manufacturer: %02x' % (flash_id & 0xff)
     print 'Device: %02x%02x' % ((flash_id >> 8) & 0xff, (flash_id >> 16) & 0xff)
 
@@ -1043,7 +1075,7 @@ def main():
     parser_write_mem.add_argument('value', help='Value', type=arg_auto_int)
     parser_write_mem.add_argument('mask', help='Mask of bits to write', type=arg_auto_int)
 
-    def add_spi_flash_subparsers(parent):
+    def add_spi_flash_subparsers(parent, auto_detect=False):
         """ Add common parser arguments for SPI flash properties """
         parent.add_argument('--flash_freq', '-ff', help='SPI Flash frequency',
                             choices=['40m', '26m', '20m', '80m'],
@@ -1051,16 +1083,21 @@ def main():
         parent.add_argument('--flash_mode', '-fm', help='SPI Flash mode',
                             choices=['qio', 'qout', 'dio', 'dout'],
                             default=os.environ.get('ESPTOOL_FM', 'qio'))
+        choices = ['4m', '2m', '8m', '16m', '32m', '16m-c1', '32m-c1', '32m-c2']
+        default = '4m'
+        if auto_detect:
+            default = 'detect'
+            choices.insert(0, 'detect')
         parent.add_argument('--flash_size', '-fs', help='SPI Flash size in Mbit', type=str.lower,
-                            choices=['4m', '2m', '8m', '16m', '32m', '16m-c1', '32m-c1', '32m-c2'],
-                            default=os.environ.get('ESPTOOL_FS', '4m'))
+                            choices=choices,
+                            default=os.environ.get('ESPTOOL_FS', default))
 
     parser_write_flash = subparsers.add_parser(
         'write_flash',
         help='Write a binary blob to flash')
     parser_write_flash.add_argument('addr_filename', metavar='<address> <filename>', help='Address followed by binary filename, separated by space',
                                     action=AddrFilenamePairAction)
-    add_spi_flash_subparsers(parser_write_flash)
+    add_spi_flash_subparsers(parser_write_flash, auto_detect=True)
     parser_write_flash.add_argument('--no-progress', '-p', help='Suppress progress output', action="store_true")
     parser_write_flash.add_argument('--verify', help='Verify just-written data (only necessary if very cautious, data is already CRCed', action='store_true')
 

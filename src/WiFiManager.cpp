@@ -43,7 +43,7 @@ WiFiManager::Mode				WiFiManager::getMode						( ) const
 
 void							WiFiManager::setMode						(	const 	WiFiManager::Mode&			aMode								)
 {
-	mode_																		=		aMode ;
+	mode_ = aMode ;
 }
 
 void							WiFiManager::start							( )
@@ -65,14 +65,15 @@ void							WiFiManager::start							( )
 		if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
 		{
 
-			SSID_																=		applicationStoragePtr_->accessSSID() ;
-			password_															=		applicationStoragePtr_->accessPassword() ;
+			SSID_ = applicationStoragePtr_->accessSSID() ;
+			password_ = applicationStoragePtr_->accessPassword() ;
 
 		}
 
 		WifiStation.config(SSID_, password_) ;
 
-		WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 30, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
+		WifiEvents.onStationGotIP(StationGotIPDelegate(&WiFiManager::onConnectionSuccess, this)) ;
+		WifiEvents.onStationDisconnect(StationDisconnectDelegate(&WiFiManager::onConnectionFailure, this)) ;
 
 	}
 
@@ -101,47 +102,55 @@ void							WiFiManager::stop							( )
 		WifiAccessPoint.enable(false) ;
 	}
 
-	active_																		=		false ;
+	active_ = false ;
 
 }
 
 void							WiFiManager::associateApplicationStorage	(			ApplicationStorage&			anApplicationStorage				)
 {
-	applicationStoragePtr_														=		&anApplicationStorage ;
+	applicationStoragePtr_ = &anApplicationStorage ;
 }
 
 void							WiFiManager::setConnectionSuccessHandler	(			Delegate<void()>			aDelegate							)
 {
-	connectionSuccessHandler_													=		aDelegate ;	
+	connectionSuccessHandler_ = aDelegate ;	
 }
 
 void							WiFiManager::setConnectionFailureHandler	(			Delegate<void()>			aDelegate							)
 {
-	connectionFailureHandler_													=		aDelegate ;	
+	connectionFailureHandler_ = aDelegate ;	
 }
 
 void							WiFiManager::startmDNS						( )
 {
 
-	struct mdns_info*			info											=		(struct mdns_info*)os_zalloc(sizeof(struct mdns_info)) ;
+	// struct mdns_info*			info											=		(struct mdns_info*)os_zalloc(sizeof(struct mdns_info)) ;
 	
-	info->host_name																=		(char*) "totomiam" ;
-	info->ipAddr																=		WifiStation.getIP() ;
-	info->server_name															=		(char*) "Sming" ;
-	info->server_port															=		80 ;
-	info->txt_data[0]															=		(char*) "version = now" ;
+	// info->host_name																=		(char*) "totomiam" ;
+	// info->ipAddr																=		WifiStation.getIP() ;
+	// info->server_name															=		(char*) "Sming" ;
+	// info->server_port															=		80 ;
+	// info->txt_data[0]															=		(char*) "version = now" ;
 
-	espconn_mdns_init(info) ;
+	// espconn_mdns_init(info) ;
 
 }
 
-void							WiFiManager::onConnectionSuccess			( )
+void							WiFiManager::onConnectionSuccess			(			IPAddress					anIPAddress,
+																						IPAddress					aMask,
+																						IPAddress					aGateway							)
 {
 
 	if (!active_)
 	{
 		return ;
 	}
+
+	Serial.println("Connection to WiFi is successful!") ;
+	
+	Serial.println("IP: " + anIPAddress.toString()) ;
+	Serial.println("Mask: " + aMask.toString()) ;
+	Serial.println("Gateway: " + aGateway.toString()) ;
 
 	this->startmDNS() ;
 
@@ -152,7 +161,10 @@ void							WiFiManager::onConnectionSuccess			( )
 
 }
 
-void							WiFiManager::onConnectionFailure			( )
+void							WiFiManager::onConnectionFailure			(			String						aSsid,
+																						uint8_t						aSsidLength,
+																						uint8_t						*bssid,
+																						uint8_t						aReason								)
 {
 
 	if (!active_)
@@ -160,12 +172,18 @@ void							WiFiManager::onConnectionFailure			( )
 		return ;
 	}
 
+	Serial.println("Connection to WiFi has failed!") ;
+
+	Serial.println("SSID: " + aSsid) ;
+	Serial.println("Reason: " + aReason) ;
+
 	if (mode_ == WiFiManager::Mode::Station)
 	{
 
 		// Retry connection
 
-		WifiStation.waitConnection(Delegate<void()>(&WiFiManager::onConnectionSuccess, this), 10, Delegate<void()>(&WiFiManager::onConnectionFailure, this)) ; // TBM param
+		WifiEvents.onStationGotIP(StationGotIPDelegate(&WiFiManager::onConnectionSuccess, this)) ;
+		WifiEvents.onStationDisconnect(StationDisconnectDelegate(&WiFiManager::onConnectionFailure, this)) ;
 
 		if (connectionFailureHandler_)
 		{

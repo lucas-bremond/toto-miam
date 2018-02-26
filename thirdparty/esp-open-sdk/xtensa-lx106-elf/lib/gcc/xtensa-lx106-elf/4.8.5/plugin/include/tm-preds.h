@@ -1,5 +1,5 @@
 /* Generated automatically by the program 'build/genpreds'
-   from the machine description file '/Volumes/esp-open-sdk/esp-open-sdk/crosstool-NG/.build/src/gcc-4.8.5/gcc/config/xtensa/xtensa.md'.  */
+   from the machine description file '/Volumes/case-sensitive/esp-open-sdk/crosstool-NG/.build/src/gcc-4.8.5/gcc/config/xtensa/xtensa.md'.  */
 
 #ifndef GCC_TM_PREDS_H
 #define GCC_TM_PREDS_H

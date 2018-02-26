@@ -122,7 +122,7 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
 
-	if (aRequest.getRequestMethod() == RequestMethod::GET)
+	if (aRequest.method == HTTP_GET)
 	{
 
 		JsonObjectStream* 		JSONStream										=		new JsonObjectStream() ;
@@ -137,7 +137,7 @@ void							ServerManager::onStatus						(			HttpRequest&				aRequest,
 	}
 	else
 	{
-		aResponse.badRequest() ;
+		aResponse.code = HTTP_STATUS_FORBIDDEN ;
 	}
 
 }
@@ -146,7 +146,7 @@ void							ServerManager::onTime				(			HttpRequest&				aRequest,
 																						HttpResponse&				aResponse							)
 {
 
-	if (aRequest.getRequestMethod() == RequestMethod::GET)
+	if (aRequest.method == HTTP_GET)
 	{
 
 		JsonObjectStream* 		JSONStream										=		new JsonObjectStream() ;
@@ -160,7 +160,7 @@ void							ServerManager::onTime				(			HttpRequest&				aRequest,
 	}
 	else
 	{
-		aResponse.badRequest() ;
+		aResponse.code = HTTP_STATUS_FORBIDDEN ;
 	}
 
 }
@@ -174,14 +174,14 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 		return aResponse.notFound() ;
 	}
 
-	if (aRequest.getRequestMethod() == RequestMethod::GET)
+	if (aRequest.method == HTTP_GET)
 	{
 
 		JsonObjectStream* 		JSONStream										=		new JsonObjectStream() ;
 
 		JsonObject&				JSONObject										=		JSONStream->getRoot() ;
 
-		String					idString										=		aRequest.getQueryParameter("id", "") ;
+		String					idString										=		aRequest.getQueryParameter("id") ;
 		
 		if (idString == "")
 		{
@@ -230,7 +230,11 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 
 			if (id == 0)
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 			if (taskManagerPtr_->hasRuleWithId(id))
@@ -270,10 +274,10 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 		aResponse.sendJsonObject(JSONStream) ;
 
 	}
-	else if (aRequest.getRequestMethod() == RequestMethod::POST)
+	else if (aRequest.method == HTTP_POST)
 	{
 
-		String					idString										=		aRequest.getPostParameter("id", "") ;
+		String					idString										=		aRequest.getPostParameter("id") ;
 
 		uint					id 												=		0 ;
 
@@ -284,7 +288,11 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 			
 			if (id == 0)
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 		}
@@ -293,7 +301,7 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 			id 																	=		taskManagerPtr_->getNextRuleId() ;
 		}
 
-		String					ruleTypeString									=		aRequest.getPostParameter("type", "") ;
+		String					ruleTypeString									=		aRequest.getPostParameter("type") ;
 
 		if (ruleTypeString != "")
 		{
@@ -306,13 +314,17 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 				case Rule::Type::Time:
 				{
 
-					String		calendarDateString								=		aRequest.getPostParameter("time", "") ;
+					String		calendarDateString								=		aRequest.getPostParameter("time") ;
 
 					Serial.println(calendarDateString) ;
 
 					if (calendarDateString == "")
 					{
-						return aResponse.badRequest() ;
+						
+						aResponse.code = HTTP_STATUS_FORBIDDEN ;
+						
+						return ;
+
 					}
 
 					CalendarDate calendarDate 									=		CalendarDate::Parse(calendarDateString) ;
@@ -321,12 +333,20 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 
 					if (!calendarDate.isDefined())
 					{
-						return aResponse.badRequest() ;
+						
+						aResponse.code = HTTP_STATUS_FORBIDDEN ;
+						
+						return ;
+
 					}
 
 					if (!taskManagerPtr_->addRule(Rule::AtTime(id, calendarDate)))
 					{
-						return aResponse.badRequest() ;
+						
+						aResponse.code = HTTP_STATUS_FORBIDDEN ;
+						
+						return ;
+
 					}
 					
 					break ;
@@ -339,43 +359,63 @@ void							ServerManager::onRules						(			HttpRequest&				aRequest,
 				// }
 
 				default:
-					return aResponse.badRequest() ;
+					
+					aResponse.code = HTTP_STATUS_FORBIDDEN ;
+					
+					return ;
+
 
 			}
 
 		}
 		else
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 	}
-	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
+	else if (aRequest.method == HTTP_DELETE)
 	{
 
-		String					ruleIdString									=		aRequest.getQueryParameter("id", "") ;
+		String					ruleIdString									=		aRequest.getQueryParameter("id") ;
 
 		if (ruleIdString == "")
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 		uint					ruleId											=		ruleIdString.toInt() ;
 
 		if (ruleId == 0)
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 		if (!taskManagerPtr_->removeRuleWithId(ruleId))
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 	}
 	else
 	{
-		aResponse.badRequest() ;
+		aResponse.code = HTTP_STATUS_FORBIDDEN ;
 	}
 
 }
@@ -389,14 +429,14 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 		return aResponse.notFound() ;
 	}
 
-	if (aRequest.getRequestMethod() == RequestMethod::GET)
+	if (aRequest.method == HTTP_GET)
 	{
 
 		JsonObjectStream* 		JSONStream										=		new JsonObjectStream() ;
 
 		JsonObject&				JSONObject										=		JSONStream->getRoot() ;
 
-		String					idString										=		aRequest.getQueryParameter("id", "") ;
+		String					idString										=		aRequest.getQueryParameter("id") ;
 		
 		if (idString == "")
 		{
@@ -429,7 +469,11 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 
 			if (id == 0)
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 			if (taskManagerPtr_->hasTaskWithId(id))
@@ -453,10 +497,10 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 		aResponse.sendJsonObject(JSONStream) ;
 
 	}
-	else if (aRequest.getRequestMethod() == RequestMethod::POST)
+	else if (aRequest.method == HTTP_POST)
 	{
 
-		String					idString										=		aRequest.getPostParameter("id", "") ;
+		String					idString										=		aRequest.getPostParameter("id") ;
 
 		uint					id 												=		0 ;
 
@@ -467,7 +511,11 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 			
 			if (id == 0)
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 		}
@@ -476,7 +524,7 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 			id 																	=		taskManagerPtr_->getNextTaskId() ;
 		}
 
-		String					executionTimeString								=		aRequest.getPostParameter("execution_time", "") ;
+		String					executionTimeString								=		aRequest.getPostParameter("execution_time") ;
 
 		if (executionTimeString != "")
 		{
@@ -485,12 +533,20 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 
 			if (!executionTime.isDefined())
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 			if (!taskManagerPtr_->addTask(Task(id, executionTime)))
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 			
 		}
@@ -499,38 +555,54 @@ void							ServerManager::onTasks						(			HttpRequest&				aRequest,
 
 			if (!taskManagerPtr_->addImmediateTask())
 			{
-				return aResponse.badRequest() ;
+				
+				aResponse.code = HTTP_STATUS_FORBIDDEN ;
+				
+				return ;
+
 			}
 
 		}
 
 	}
-	else if (aRequest.getRequestMethod() == RequestMethod::DELETE)
+	else if (aRequest.method == HTTP_DELETE)
 	{
 
-		String					taskIdString									=		aRequest.getQueryParameter("id", "") ;
+		String					taskIdString									=		aRequest.getQueryParameter("id") ;
 		
 		if (taskIdString == "")
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 		uint					taskId											=		taskIdString.toInt() ;
 
 		if (taskId == 0)
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 		if (!taskManagerPtr_->removeTaskWithId(taskId))
 		{
-			return aResponse.badRequest() ;
+			
+			aResponse.code = HTTP_STATUS_FORBIDDEN ;
+			
+			return ;
+
 		}
 
 	}
 	else
 	{
-		aResponse.badRequest() ;
+		aResponse.code = HTTP_STATUS_FORBIDDEN ;
 	}
 
 }
