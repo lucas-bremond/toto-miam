@@ -1,7 +1,15 @@
 #!/bin/bash
 
-current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+env -i
 
-${current_directory}/clean.sh
+tools_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+thirdparty_directory="${tools_directory}/../thirdparty"
 
-(cd ${current_directory}/.. && make -j 8 flash)
+export ESP_HOME="${thirdparty_directory}/esp-open-sdk"
+export SMING_HOME="${thirdparty_directory}/Sming/Sming"
+
+pushd "${tools_directory}/.."
+
+make -j 8 flash
+
+popd

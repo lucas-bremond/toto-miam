@@ -2,6 +2,8 @@
 
 # https://github.com/SmingHub/Sming/wiki/MacOS-Quickstart
 
+env -i
+
 thirdparty_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # xcode-select --install

@@ -1,7 +1,17 @@
 #!/bin/bash
 
-current_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+env -i
 
-# ${current_directory}/../thirdparty/esp-open-sdk/esptool/esptool.py --port /dev/tty.SLAB_USBtoUART erase_flash
+tools_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+thirdparty_directory="${tools_directory}/../thirdparty"
 
-(cd ${current_directory}/.. && make flashinit)
+export ESP_HOME="${thirdparty_directory}/esp-open-sdk"
+export SMING_HOME="${thirdparty_directory}/Sming/Sming"
+
+pushd "${tools_directory}/.."
+
+# ${tools_directory}/../thirdparty/esp-open-sdk/esptool/esptool.py --port /dev/tty.SLAB_USBtoUART erase_flash
+
+make flashinit
+
+popd

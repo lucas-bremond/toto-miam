@@ -12,7 +12,7 @@ MODULES = src
 
 ## MacOS / Linux:
 # ESP_HOME = /opt/esp-open-sdk
-ESP_HOME = ./thirdparty/esp-open-sdk
+# ESP_HOME = ./thirdparty/esp-open-sdk
 
 # ESPTOOL2 = ./thirdparty/esptool2/esptool2
 
@@ -30,11 +30,12 @@ SMING_HOME = ./thirdparty/Sming/Sming
 
 ## MacOS / Linux:
 # COM_PORT = /dev/tty.usbserial
-# COM_PORT = /dev/tty.SLAB_USBtoUART
+COM_PORT = /dev/tty.SLAB_USBtoUART
 # COM_PORT = /dev/tty.wchusbserialfd120
 # COM_PORT = /dev/cu.wchusbserialfa130
 # COM_PORT = /dev/tty.wchusbserialfa130
-COM_PORT = /dev/tty.wchusbserial40110
+# COM_PORT = /dev/tty.wchusbserial40110
+# COM_PORT = /dev/tty.wchusbserial401310
 
 # If serial not found: sudo easy_install pyserial
 
