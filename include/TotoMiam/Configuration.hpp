@@ -1,85 +1,82 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/Configuration.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/Configuration.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Configuration_HPP_INCLUDED__
-#define __TotoMiam_Configuration_HPP_INCLUDED__
+#ifndef __TotoMiam_Configuration__
+#define __TotoMiam_Configuration__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	// UART config
+    // UART config
 
-	// #define SERIAL_BAUD_RATE 115200
+    // #define SERIAL_BAUD_RATE 115200
 
-	// Pins
+    // Pins
 
-	#define PIN_LED 13
+    #define PIN_LED 13
 
-	#define PIN_MOTOR_Ap 0
-	#define PIN_MOTOR_Am 5
+    #define PIN_MOTOR_Ap 0
+    #define PIN_MOTOR_Am 5
 
-	// ESP SDK config
-	#define LWIP_OPEN_SRC
-	#define USE_US_TIMER
+    // ESP SDK config
+    #define LWIP_OPEN_SRC
+    #define USE_US_TIMER
 
-	// Default types
-	#define __CORRECT_ISO_CPP_STDLIB_H_PROTO
-	#include <limits.h>
-	#include <stdint.h>
+    // Default types
+    #define __CORRECT_ISO_CPP_STDLIB_H_PROTO
+    #include <limits.h>
+    #include <stdint.h>
 
-	// Override c_types.h include and remove buggy espconn
-	#define _C_TYPES_H_
-	#define _NO_ESPCON_
+    // Override c_types.h include and remove buggy espconn
+    #define _C_TYPES_H_
+    #define _NO_ESPCON_
 
-	// Updated, compatible version of c_types.h
-	// Just removed types declared in <stdint.h>
-	#include <espinc/c_types_compatible.h>
+    // Updated, compatible version of c_types.h
+    // Just removed types declared in <stdint.h>
+    #include <espinc/c_types_compatible.h>
 
-	// System API declarations
-	#include <esp_systemapi.h>
+    // System API declarations
+    #include <esp_systemapi.h>
 
-	// C++ Support
-	#include <esp_cplusplus.h>
-	// Extended string conversion for compatibility
-	#include <stringconversion.h>
-	// Network base API
-	#include <espinc/lwip_includes.h>
+    // C++ Support
+    #include <esp_cplusplus.h>
+    // Extended string conversion for compatibility
+    #include <stringconversion.h>
+    // Network base API
+    #include <espinc/lwip_includes.h>
 
-	// Beta boards
-	#define BOARD_ESP01
+    // Beta boards
+    #define BOARD_ESP01
 
 #ifdef __cplusplus
 }
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static const uint8_t			D0												=		16 ;
-static const uint8_t			D1												=		5 ;
-static const uint8_t			D2												=		4 ;
-static const uint8_t			D3												=		0 ;
-static const uint8_t			D4												=		2 ;
-static const uint8_t			D5												=		14 ;
-static const uint8_t			D6												=		12 ;
-static const uint8_t			D7												=		13 ;
-static const uint8_t			D8												=		15 ;
-static const uint8_t			D9												=		3 ;
-static const uint8_t			D10												=		1 ;
+static const uint8_t            D0                                              =       16 ;
+static const uint8_t            D1                                              =       5 ;
+static const uint8_t            D2                                              =       4 ;
+static const uint8_t            D3                                              =       0 ;
+static const uint8_t            D4                                              =       2 ;
+static const uint8_t            D5                                              =       14 ;
+static const uint8_t            D6                                              =       12 ;
+static const uint8_t            D7                                              =       13 ;
+static const uint8_t            D8                                              =       15 ;
+static const uint8_t            D9                                              =       3 ;
+static const uint8_t            D10                                             =       1 ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

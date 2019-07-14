@@ -1,18 +1,21 @@
+#!/usr/bin/env bash
+
 ################################################################################################################################################################
 
 # @project        Toto|Miam
-# @file           .gitignore
+# @file           tools/development/helpers/erase.sh
 # @author         Lucas Brémond <lucas.bremond@gmail.com>
 # @license        MIT License
 
 ################################################################################################################################################################
 
-.DS_Store
-files/Settings.json
-ld
-out
-tmp
-thirdparty/*
-!thirdparty/setup.sh
+script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+project_directory="${script_directory}/../../.."
+
+pushd "${project_directory}" > /dev/null
+
+make flashinit
+
+popd > /dev/null
 
 ################################################################################################################################################################

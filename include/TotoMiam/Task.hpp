@@ -1,88 +1,84 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/Task.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/Task.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Task_HPP_INCLUDED__
-#define __TotoMiam_Task_HPP_INCLUDED__
+#ifndef __TotoMiam_Task__
+#define __TotoMiam_Task__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
 
 #include <TotoMiam/Time.hpp>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace TotoMiam
+namespace totomiam
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Task
 {
 
-	public:
+    public:
 
-		enum class Status
-		{
+        enum class Status
+        {
 
-			Undefined,
-			Pending,
-			Executing,
-			Completed,
-			Failed
+            Undefined,
+            Pending,
+            Executing,
+            Completed,
+            Failed
 
-		} ;
+        } ;
 
-								Task 										( ) ;
+                                Task                                        (   const   uint&                       anId,
+                                                                                const   Time&                       anExecutionTime,
+                                                                                const   Duration&                   aDuration                                   =   Duration::Seconds(3),
+                                                                                const   uint&                       aRuleId                                     =   0,
+                                                                                const   Task::Status&               aStatus                                     =   Task::Status::Pending ) ;
 
-								Task 										( 	const 	uint&						anId,
-																				const 	Time&						anExecutionTime,
-																				const 	Duration&					aDuration							=	Duration::Seconds(3),
-																				const 	uint&						aRuleId								=	0 ) ;
+        bool                    isDefined                                   ( ) const ;
+        bool                    isRuleDefined                               ( ) const ;
 
-		bool					isDefined									( ) const ;
-		bool					isRuleDefined								( ) const ;
+        uint                    getId                                       ( ) const ;
+        Task::Status            getStatus                                   ( ) const ;
+        Time                    getExecutionTime                            ( ) const ;
+        Duration                getDuration                                 ( ) const ;
+        uint                    getRuleId                                   ( ) const ;
 
-		uint					getId										( ) const ;
-		Task::Status 			getStatus									( ) const ;
-		Time 					getExecutionTime							( ) const ;
-		Duration				getDuration									( ) const ;
-		uint					getRuleId									( ) const ;
+        void                    setStatus                                   (   const   Task::Status&               aStatus                                     ) ;
 
-		void					setStatus									(	const 	Task::Status&				aStatus								) ;
+        void                    execute                                     ( ) ;
 
-		void					execute										( ) ;
+        static Task             Undefined                                   ( ) ;
 
-		static Task 			Undefined									( ) ;
+        static String           StringFromStatus                            (   const   Task::Status&               aStatus                                     ) ;
 
-		static String			getStringOfStatus							(	const 	Task::Status&				aStatus								) ;
+    private:
 
-	private:
+        uint                    id_ ;
+        Task::Status            status_ ;
+        Time                    executionTime_ ;
+        Duration                duration_ ;
 
-		uint					id_ ;
-		Task::Status			status_ ;
-		Time 					executionTime_ ;
-		Duration				duration_ ;
-
-		uint					ruleId_ ;
+        uint                    ruleId_ ;
 
 } ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

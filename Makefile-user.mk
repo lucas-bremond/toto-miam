@@ -1,9 +1,18 @@
+################################################################################################################################################################
+
+# @project        Toto|Miam
+# @file           Makefile-user.mk
+# @author         Lucas Brémond <lucas.bremond@gmail.com>
+# @license        MIT License
+
+################################################################################################################################################################
+
 ## Local build configuration
 ## Parameters configured here will override default and ENV values.
 ## Uncomment and change examples:
 
 ## Add your source directories here separated by space
-MODULES = src
+MODULES = src/TotoMiam
 # EXTRA_INCDIR = include
 
 ## ESP_HOME sets the path where ESP tools and SDK are located.
@@ -11,31 +20,31 @@ MODULES = src
 # ESP_HOME = c:/Espressif
 
 ## MacOS / Linux:
-# ESP_HOME = /opt/esp-open-sdk
+ESP_HOME = /opt/esp-open-sdk
 # ESP_HOME = ./thirdparty/esp-open-sdk
 
+ESPTOOL2 = /opt/esp-open-sdk/esptool2/esptool2
 # ESPTOOL2 = ./thirdparty/esptool2/esptool2
 
 ## SMING_HOME sets the path where Sming framework is located.
 ## Windows:
-# SMING_HOME = c:/tools/sming/Sming 
+# SMING_HOME = c:/tools/sming/Sming
 
 ## MacOS / Linux
-# SMING_HOME = /opt/sming/Sming
-SMING_HOME = ./thirdparty/Sming/Sming
+SMING_HOME = /opt/Sming/Sming
+# SMING_HOME = ./thirdparty/Sming/Sming
 
 ## COM port parameter is reqruied to flash firmware correctly.
-## Windows: 
+## Windows:
 # COM_PORT = COM3
 
 ## MacOS / Linux:
 # COM_PORT = /dev/tty.usbserial
-COM_PORT = /dev/tty.SLAB_USBtoUART
+COM_PORT = /dev/ttyUSB0
+# COM_PORT = /dev/tty.SLAB_USBtoUART
 # COM_PORT = /dev/tty.wchusbserialfd120
 # COM_PORT = /dev/cu.wchusbserialfa130
 # COM_PORT = /dev/tty.wchusbserialfa130
-# COM_PORT = /dev/tty.wchusbserial40110
-# COM_PORT = /dev/tty.wchusbserial401310
 
 # If serial not found: sudo easy_install pyserial
 
@@ -56,3 +65,7 @@ ENABLE_GDB = 0
 SPI_SIZE = 4M
 # COM_SPEED = 115200
 # SPI_MODE = dio
+
+RBOOT_ENABLED=1
+
+################################################################################################################################################################

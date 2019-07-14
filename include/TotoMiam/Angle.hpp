@@ -1,78 +1,75 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/Angle.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/Angle.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Angle_HPP_INCLUDED__
-#define __TotoMiam_Angle_HPP_INCLUDED__
+#ifndef __TotoMiam_Angle__
+#define __TotoMiam_Angle__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace TotoMiam
+namespace totomiam
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Angle
 {
 
-	public:
+    public:
 
-								Angle 										( ) ;
+        bool                    operator ==                                 (   const   Angle&                      anAngle                                     ) const ;
+        bool                    operator !=                                 (   const   Angle&                      anAngle                                     ) const ;
+        bool                    operator <=                                 (   const   Angle&                      anAngle                                     ) const ;
+        bool                    operator <                                  (   const   Angle&                      anAngle                                     ) const ;
+        bool                    operator >=                                 (   const   Angle&                      anAngle                                     ) const ;
+        bool                    operator >                                  (   const   Angle&                      anAngle                                     ) const ;
 
-		bool					operator ==									(	const 	Angle&						anAngle 							) const ;
-		bool					operator !=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator <=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator <									(	const 	Angle&						anAngle 							) const ;
-		bool					operator >=									(	const 	Angle&						anAngle 							) const ;
-		bool					operator >									(	const 	Angle&						anAngle 							) const ;
+        Angle                   operator +                                  (   const   Angle&                      anAngle                                     ) const ;
+        Angle                   operator -                                  (   const   Angle&                      anAngle                                     ) const ;
 
-		Angle 					operator +									(	const 	Angle&						anAngle								) const ;
-		Angle 					operator -									(	const 	Angle&						anAngle								) const ;
+        bool                    isDefined                                   ( ) const ;
+        bool                    isZero                                      ( ) const ;
 
-		bool					isDefined									( ) const ;
-		bool					isZero										( ) const ;
+        float                   getDegrees                                  ( ) const ;
+        float                   getRadians                                  ( ) const ;
+        float                   getRevolutions                              ( ) const ;
 
-		float					getDegrees									( ) const ;
-		float					getRadians									( ) const ;
-		float					getRevolutions								( ) const ;
+        String                  toString                                    ( ) const ;
 
-		String					getString									( ) const ;
+        static Angle            Undefined                                   ( ) ;
 
-		static Angle 			Undefined									( ) ;
+        static Angle            Zero                                        ( ) ;
 
-		static Angle 			Zero										( ) ;
+        static Angle            Degrees                                     (   const   float&                      aValue                                      ) ;
+        static Angle            Radians                                     (   const   float&                      aValue                                      ) ;
+        static Angle            Revolutions                                 (   const   float&                      aValue                                      ) ;
 
-		static Angle 			Degrees										( 	const 	float&						aValue								) ;
-		static Angle 			Radians										( 	const 	float&						aValue								) ;
-		static Angle 			Revolutions									( 	const 	float&						aValue								) ;
+        static Angle            Parse                                       (   const   String&                     aString                                     ) ;
 
-		static Angle 			Parse										( 	const 	String&						aString								) ;
+    private:
 
-	private:
+        bool                    defined_ ;
+        float                   degrees_ ;
 
-		bool					defined_ ;
-		float					degrees_ ;
+                                Angle                                       ( ) ;
 
 } ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

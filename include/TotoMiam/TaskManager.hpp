@@ -1,19 +1,16 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/TaskManager.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/TaskManager.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_TaskManager_HPP_INCLUDED__
-#define __TotoMiam_TaskManager_HPP_INCLUDED__
+#ifndef __TotoMiam_TaskManager__
+#define __TotoMiam_TaskManager__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <SmingCore/SmingCore.h>
 
@@ -22,76 +19,76 @@
 #include <TotoMiam/Rule.hpp>
 #include <TotoMiam/Task.hpp>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace TotoMiam
+namespace totomiam
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class TaskManager
 {
 
-	public:
+    public:
 
-								TaskManager 								( ) ;
+                                TaskManager                                 ( ) ;
 
-		bool					isActive									( ) const ;
+        bool                    isActive                                    ( ) const ;
 
-		void					start										( ) ;
-		void					stop										( ) ;
+        void                    start                                       ( ) ;
+        void                    stop                                        ( ) ;
 
-		void					associateApplicationStorage					(			ApplicationStorage&			anApplicationStorage				) ;
+        void                    associateApplicationStorage                 (           ApplicationStorage&         anApplicationStorage                        ) ;
 
-		bool					hasRuleWithId								(	const	uint&						aRuleId								) const ;
-		bool					hasTaskWithId								(	const	uint&						aTaskId								) const ;
+        bool                    hasRuleWithId                               (   const   uint&                       aRuleId                                     ) const ;
+        bool                    hasTaskWithId                               (   const   uint&                       aTaskId                                     ) const ;
 
-		const Rule&				accessRuleWithId							(	const	uint&						aRuleId								) const ;
-		const Task&				accessTaskWithId							(	const	uint&						aTaskId								) const ;
+        const Rule&             accessRuleWithId                            (   const   uint&                       aRuleId                                     ) const ;
+        const Task&             accessTaskWithId                            (   const   uint&                       aTaskId                                     ) const ;
 
-		const Vector<Rule>&		accessRules									( ) const ;
-		const Vector<Task>&		accessTasks									( ) const ;
+        const Vector<Rule>&     accessRules                                 ( ) const ;
+        const Vector<Task>&     accessTasks                                 ( ) const ;
 
-		uint					getNextRuleId								( ) const ;
-		uint					getNextTaskId								( ) const ;
+        uint                    getNextRuleId                               ( ) const ;
+        uint                    getNextTaskId                               ( ) const ;
 
-		bool					addRule										(	const	Rule&						aRule								) ;
-		bool					addTask										(	const	Task&						aTask								) ;
+        bool                    addRule                                     (   const   Rule&                       aRule                                       ) ;
+        bool                    addTask                                     (   const   Task&                       aTask                                       ) ;
 
-		bool					removeRuleWithId							(	const	uint&						aRuleId								) ;
-		bool					removeTaskWithId							(	const	uint&						aTaskId								) ;
+        bool                    removeRuleWithId                            (   const   uint&                       aRuleId                                     ) ;
+        bool                    removeTaskWithId                            (   const   uint&                       aTaskId                                     ) ;
 
-		bool					addImmediateTask							( ) ;
+        bool                    addImmediateTask                            ( ) ;
 
-	private:
+    private:
 
-		bool					active_ ;
+        bool                    active_ ;
 
-		ApplicationStorage*		applicationStoragePtr_ ;
+        ApplicationStorage*     applicationStoragePtr_ ;
 
-		Vector<Rule>			rules_ ;
-		Vector<Task>			tasks_ ;
+        Vector<Rule>            rules_ ;
+        Vector<Task>            tasks_ ;
 
-		uint					ruleCountLimit_ ;
-		uint					taskCountLimit_ ;
+        uint                    ruleCountLimit_ ;
+        uint                    taskCountLimit_ ;
 
-		Timer					timer_ ;
+        Timer                   timer_ ;
 
-		Task*					currentTaskPtr_ ;
+        Task*                   currentTaskPtr_ ;
 
-		void					load										( ) ;
-		void					save										( ) ;
+        void                    load                                        ( ) ;
+        void                    save                                        ( ) ;
 
-		void					onManage									( ) ;
+        void                    onManage                                    ( ) ;
 
 } ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

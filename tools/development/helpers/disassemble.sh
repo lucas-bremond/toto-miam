@@ -1,18 +1,14 @@
+#!/usr/bin/env bash
+
 ################################################################################################################################################################
 
 # @project        Toto|Miam
-# @file           .gitignore
+# @file           tools/development/helpers/disassemble.sh
 # @author         Lucas Brémond <lucas.bremond@gmail.com>
 # @license        MIT License
 
 ################################################################################################################################################################
 
-.DS_Store
-files/Settings.json
-ld
-out
-tmp
-thirdparty/*
-!thirdparty/setup.sh
+/opt/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf/bin/objdump -d /app/out/build/app.out > /app/out/disassemble.txt
 
 ################################################################################################################################################################
