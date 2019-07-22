@@ -19,6 +19,11 @@ namespace totomiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const Rule UndefinedRule = Rule::Undefined() ;
+const Task UndefinedTask = Task::Undefined() ;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                                 TaskManager::TaskManager                    ( )
                                 :   active_(false),
                                     applicationStoragePtr_(nullptr),
@@ -135,6 +140,8 @@ const Rule&                     TaskManager::accessRuleWithId               (   
 
     }
 
+    return UndefinedRule ;
+
 }
 
 const Task&                     TaskManager::accessTaskWithId               (   const   uint&                       aTaskId                                     ) const
@@ -151,6 +158,8 @@ const Task&                     TaskManager::accessTaskWithId               (   
         }
 
     }
+
+    return UndefinedTask ;
 
 }
 
@@ -401,7 +410,7 @@ void                            TaskManager::save                           ( )
 void                            TaskManager::onManage                        ( )
 {
 
-    Serial.println("Managing Tasks...") ;
+    // Serial.println("Managing Tasks...") ;
 
     const Time currentTime = Time::Now() ;
 
@@ -412,11 +421,11 @@ void                            TaskManager::onManage                        ( )
 
         Task& task = tasks_[idx] ;
 
-        Serial.print("Task [") ;
-        Serial.print(task.getId()) ;
-        Serial.print("] status is [") ;
-        Serial.print(Task::StringFromStatus(task.getStatus())) ;
-        Serial.println("].") ;
+        // Serial.print("Task [") ;
+        // Serial.print(task.getId()) ;
+        // Serial.print("] status is [") ;
+        // Serial.print(Task::StringFromStatus(task.getStatus())) ;
+        // Serial.println("].") ;
 
         if (task.getStatus() == Task::Status::Pending)
         {

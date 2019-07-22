@@ -7,18 +7,23 @@
 
 ######################################################################################################################################################
 
-FROM attachix/c9-esp8266-sdk:latest
+FROM ubuntu:18.04
 
 LABEL maintainer="lucas.bremond@gmail.com"
 
+# Install utilities
+
+RUN apt-get update \
+ && apt-get install -y git wget nano screen \
+ && rm -rf /var/lib/apt/lists/*
+
 # Install and setup ZSH
 
-RUN apk update \
- && apk upgrade \
- && apk add --no-cache zsh \
- && rm -f /etc/apk/cache/*
+RUN apt-get update \
+ && apt-get install -y zsh \
+ && rm -rf /var/lib/apt/lists/*
 
-RUN sed -i -e "s/bin\/ash/bin\/zsh/" /etc/passwd
+RUN sed -i -e "s/bin\/bash/bin\/zsh/" /etc/passwd
 
 ENV SHELL /bin/zsh
 
@@ -31,18 +36,49 @@ RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -
 
 COPY .zshrc /root/.zshrc
 
-# Install and build Sming
+# Install build tools
+
+RUN apt-get update \
+ && apt-get install -y make unrar autoconf automake libtool libtool-bin gcc g++ gperf flex bison texinfo gawk ncurses-dev libexpat1-dev python sed python-serial python-dev srecord bc git help2man unzip bzip2 \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install esp-open-sdk
+
+ENV CT_EXPERIMENTAL y
+ENV CT_ALLOW_BUILD_AS_ROOT y
+ENV CT_ALLOW_BUILD_AS_ROOT_SURE y
+
+RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git /opt/esp-open-sdk \
+ && cd /opt/esp-open-sdk \
+ && make VENDOR_SDK=1.5.4 STANDALONE=y
+
+ENV ESP_HOME /opt/esp-open-sdk
+
+# Get and Build Sming Core
+
+RUN git clone https://github.com/SmingHub/Sming.git /opt/Sming
+#  && cd /opt/Sming \
+#  && git checkout tags/3.8.0
 
 ENV SMING_HOME /opt/Sming/Sming
 
-RUN git clone https://github.com/SmingHub/Sming.git /opt/Sming \
- && cd /opt/Sming \
- && git checkout origin/master \
- && git submodule init \
- && git submodule update \
- && cd /opt/Sming/Sming \
+# Install esptool.py
+
+RUN apt-get update \
+ && apt-get install python-serial unzip \
+ && rm -rf /var/lib/apt/lists/* \
+ && wget https://github.com/themadinventor/esptool/archive/master.zip \
+ && unzip master.zip \
+ && mv esptool-master ${ESP_HOME}/esptool \
+ && rm master.zip
+
+# Install esptool2
+
+RUN cd ${ESP_HOME} \
+ && git clone https://github.com/raburton/esptool2 \
+ && cd esptool2 \
  && make
 
-RUN apk add screen nano
+ENV PATH ${PATH}:${ESP_HOME}/esptool2
 
 ######################################################################################################################################################

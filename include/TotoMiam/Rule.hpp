@@ -12,7 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
+#include <SmingCore.h>
 
 #include <TotoMiam/Time.hpp>
 #include <TotoMiam/CalendarDate.hpp>
@@ -50,6 +50,8 @@ class Rule
         Time                    getNextExecutionTime                        ( ) const ;
 
         void                    resetExecutionTime                          (   const   Time&                       aTime                                       ) ;
+
+        static Rule             Undefined                                   ( ) ;
 
         static Rule             AtTime                                      (   const   uint&                       anId,
                                                                                 const   CalendarDate&               aCalendarDate,

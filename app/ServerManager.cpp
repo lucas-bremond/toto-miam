@@ -10,6 +10,8 @@
 #include <TotoMiam/ServerManager.hpp>
 #include <TotoMiam/Version.hpp>
 
+#include <JsonObjectStream.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace totomiam
@@ -122,14 +124,14 @@ void                            ServerManager::onStatus                     (   
     if (aRequest.method == HTTP_GET)
     {
 
-        JsonObjectStream* JSONStream = new JsonObjectStream() ;
+        JsonObjectStream* jsonStream = new JsonObjectStream() ;
 
-        JsonObject& JSONObject = JSONStream->getRoot() ;
+        JsonObject jsonObject = jsonStream->getRoot() ;
 
-        JSONObject["status"] = (bool)true ;
-        JSONObject["version"] = (String)Version::Current().toString() ;
+        jsonObject["status"] = (bool)true ;
+        jsonObject["version"] = (String)Version::Current().toString() ;
 
-        aResponse.sendDataStream(JSONStream, MIME_JSON) ;
+        aResponse.sendDataStream(jsonStream, MIME_JSON) ;
 
     }
     else
@@ -146,13 +148,13 @@ void                            ServerManager::onTime                       (   
     if (aRequest.method == HTTP_GET)
     {
 
-        JsonObjectStream* JSONStream = new JsonObjectStream() ;
+        JsonObjectStream* jsonStream = new JsonObjectStream() ;
 
-        JsonObject& JSONObject = JSONStream->getRoot() ;
+        JsonObject jsonObject = jsonStream->getRoot() ;
 
-        JSONObject["time"] = (String)Time::Now().toString() ;
+        jsonObject["time"] = (String)Time::Now().toString() ;
 
-        aResponse.sendDataStream(JSONStream, MIME_JSON) ;
+        aResponse.sendDataStream(jsonStream, MIME_JSON) ;
 
     }
     else
@@ -178,23 +180,23 @@ void                            ServerManager::onRules                      (   
     if (aRequest.method == HTTP_GET)
     {
 
-        JsonObjectStream* JSONStream = new JsonObjectStream() ;
+        JsonObjectStream* jsonStream = new JsonObjectStream() ;
 
-        JsonObject& JSONObject = JSONStream->getRoot() ;
+        JsonObject jsonObject = jsonStream->getRoot() ;
 
         const String idString = aRequest.getQueryParameter("id") ;
 
         if (idString == "")
         {
 
-            JsonArray& ruleArray = JSONObject.createNestedArray("rules") ;
+            JsonArray ruleArray = jsonObject.createNestedArray("rules") ;
 
             for (uint idx = 0; idx < taskManagerPtr_->accessRules().size(); ++idx)
             {
 
                 const Rule& rule = taskManagerPtr_->accessRules().elementAt(idx) ;
 
-                JsonObject& ruleObject = ruleArray.createNestedObject() ;
+                JsonObject ruleObject = ruleArray.createNestedObject() ;
 
                 ruleObject["id"] = (int)rule.getId() ;
                 ruleObject["type"] = (String)Rule::StringFromType(rule.getType()) ;
@@ -243,18 +245,18 @@ void                            ServerManager::onRules                      (   
 
                 const Rule& rule = taskManagerPtr_->accessRuleWithId(id) ;
 
-                JSONObject["id"] = (int)rule.getId() ;
-                JSONObject["type"] = (String)Rule::StringFromType(rule.getType()) ;
+                jsonObject["id"] = (int)rule.getId() ;
+                jsonObject["type"] = (String)Rule::StringFromType(rule.getType()) ;
 
                 switch (rule.getType())
                 {
 
                     case Rule::Type::Time:
-                        JSONObject["time"] = (String)rule.getTime().toString(CalendarDate::Format::Time) ;
+                        jsonObject["time"] = (String)rule.getTime().toString(CalendarDate::Format::Time) ;
                         break ;
 
                     case Rule::Type::Interval:
-                        JSONObject["interval"] = (String)rule.getInterval().toString() ;
+                        jsonObject["interval"] = (String)rule.getInterval().toString() ;
                         break ;
 
                     default:
@@ -265,14 +267,14 @@ void                            ServerManager::onRules                      (   
 
                 if (rule.getPreviousExecutionTime().isDefined())
                 {
-                    JSONObject["previous_execution_time"] = (String)CalendarDate::Time(rule.getPreviousExecutionTime()).toString(CalendarDate::Format::DateTime) ;
+                    jsonObject["previous_execution_time"] = (String)CalendarDate::Time(rule.getPreviousExecutionTime()).toString(CalendarDate::Format::DateTime) ;
                 }
 
             }
 
         }
 
-        aResponse.sendDataStream(JSONStream, MIME_JSON) ;
+        aResponse.sendDataStream(jsonStream, MIME_JSON) ;
 
     }
     else if (aRequest.method == HTTP_POST)
@@ -437,23 +439,23 @@ void                            ServerManager::onTasks                        ( 
     if (aRequest.method == HTTP_GET)
     {
 
-        JsonObjectStream* JSONStream = new JsonObjectStream() ;
+        JsonObjectStream* jsonStream = new JsonObjectStream() ;
 
-        JsonObject& JSONObject = JSONStream->getRoot() ;
+        JsonObject jsonObject = jsonStream->getRoot() ;
 
         const String idString = aRequest.getQueryParameter("id") ;
 
         if (idString == "")
         {
 
-            JsonArray& taskArray = JSONObject.createNestedArray("tasks") ;
+            JsonArray taskArray = jsonObject.createNestedArray("tasks") ;
 
             for (uint idx = 0; idx < taskManagerPtr_->accessTasks().size(); ++idx)
             {
 
                 const Task& task = taskManagerPtr_->accessTasks().elementAt(idx) ;
 
-                JsonObject& taskObject = taskArray.createNestedObject() ;
+                JsonObject taskObject = taskArray.createNestedObject() ;
 
                 taskObject["id"] = (int)task.getId() ;
                 taskObject["status"] = (String)Task::StringFromStatus(task.getStatus()) ;
@@ -486,20 +488,20 @@ void                            ServerManager::onTasks                        ( 
 
                 const Task& task = taskManagerPtr_->accessTaskWithId(id) ;
 
-                JSONObject["id"] = (int)task.getId() ;
-                JSONObject["status"] = (String)Task::StringFromStatus(task.getStatus()) ;
-                JSONObject["execution_time"] = (String)task.getExecutionTime().toString() ;
+                jsonObject["id"] = (int)task.getId() ;
+                jsonObject["status"] = (String)Task::StringFromStatus(task.getStatus()) ;
+                jsonObject["execution_time"] = (String)task.getExecutionTime().toString() ;
 
                 if (task.isRuleDefined())
                 {
-                    JSONObject["rule_id"] = (int)task.getRuleId() ;
+                    jsonObject["rule_id"] = (int)task.getRuleId() ;
                 }
 
             }
 
         }
 
-        aResponse.sendDataStream(JSONStream, MIME_JSON) ;
+        aResponse.sendDataStream(jsonStream, MIME_JSON) ;
 
     }
     else if (aRequest.method == HTTP_POST)

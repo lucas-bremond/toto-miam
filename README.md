@@ -74,10 +74,10 @@ make flash
 
 ## Copyright
 
-(c) 2016 - 2018 Lucas Brémond
+(c) 2016 - 2019 Lucas Brémond
 
 Citing Peter Andersson, author of the great [SPIFFS](https://github.com/pellepl/spiffs) library:
 
-*For legal stuff, see LICENSE.*     
-*Basically, you may do whatever you want with the source.*      
-*Use, modify, sell, print it out, roll it and smoke it - as long as I won't be held responsible.*   
+*For legal stuff, see LICENSE.*
+*Basically, you may do whatever you want with the source.*
+*Use, modify, sell, print it out, roll it and smoke it - as long as I won't be held responsible.*

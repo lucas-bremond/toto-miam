@@ -14,7 +14,12 @@ project_directory="${script_directory}/../../.."
 
 pushd "${project_directory}" > /dev/null
 
-screen /dev/ttyUSB0 115200
+# screen /dev/ttyUSB0 74880 # Exit: Ctrl-a Ctrl-\
+# screen /dev/ttyUSB0 115200 # Exit: Ctrl-a Ctrl-\
+
+# python -m serial.tools.miniterm /dev/ttyUSB0 74880
+# python -m serial.tools.miniterm --raw --encoding ascii /dev/ttyUSB0 74880
+python -m serial.tools.miniterm --raw --encoding ascii /dev/ttyUSB0 115200
 
 popd > /dev/null
 

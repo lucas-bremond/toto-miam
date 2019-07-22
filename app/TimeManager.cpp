@@ -22,6 +22,10 @@ namespace totomiam
                                     ntpClient_(nullptr)
 {
 
+    // Set timezone hourly difference to UTC
+
+    // SystemClock.setTimeZone(2);
+
 }
 
 bool                            TimeManager::isActive                       ( ) const

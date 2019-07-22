@@ -9,10 +9,16 @@
 
 #include <TotoMiam/ApplicationStorage.hpp>
 
+#include <ArduinoJson.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace totomiam
 {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static bool mounted = false ;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,44 +32,62 @@ bool                            ApplicationStorage::isDefined               ( )
     return fileExist(APP_SETTINGS_FILE) ;
 }
 
-const String&                   ApplicationStorage::accessSSID              ( ) const
+String                          ApplicationStorage::getSsid                 ( ) const
 {
     return ssid_ ;
 }
 
-const String&                   ApplicationStorage::accessPassword          ( ) const
+String                          ApplicationStorage::getPassword             ( ) const
 {
     return password_ ;
+}
+
+void                            ApplicationStorage::setup                   ( )
+{
+
+    if (!mounted)
+    {
+
+        Serial.println("Mounting File System...") ;
+
+        spiffs_mount() ;
+
+        mounted = true ;
+
+        Serial.println("File System is mounted.") ;
+
+    }
+
 }
 
 void                            ApplicationStorage::load                    ( )
 {
 
-    // Serial.println("Loading application storage...") ;
+    Serial.println("Loading Application Storage...") ;
 
     if (this->isDefined())
     {
 
-        DynamicJsonBuffer jsonBuffer ;
-
-        const int size = fileGetSize(APP_SETTINGS_FILE) ;
+        const size_t size = fileGetSize(APP_SETTINGS_FILE) ;
 
         char* jsonString = new char[size + 1] ;
 
         fileGetContent(APP_SETTINGS_FILE, jsonString, size + 1) ;
 
-        JsonObject& root = jsonBuffer.parseObject(jsonString) ;
+        DynamicJsonDocument jsonDocument(size) ;
 
-        JsonObject& network = root["network"] ;
+        deserializeJson(jsonDocument, jsonString) ;
 
-        ssid_ = network["ssid"].asString() ;
-        password_ = network["password"].asString() ;
+        JsonObject network = jsonDocument["network"] ;
+
+        ssid_ = network["ssid"].as<const char*>() ;
+        password_ = network["password"].as<const char*>() ;
 
         delete[] jsonString ;
 
     }
 
-    // Serial.println("Loading application storage [OK]") ;
+    Serial.println("Application Storage is loaded.") ;
 
 }
 

@@ -21,7 +21,7 @@ namespace totomiam
                                 Application::Application                    ( )
                                 :   wifiEnabled_(true),
                                     wifiActive_(false),
-                                    statusTimerEnabled_(false)
+                                    statusTimerEnabled_(true)
 {
 
 }
@@ -39,19 +39,12 @@ bool                            Application::isActive                       ( ) 
 void                            Application::start                          ( )
 {
 
+    Serial.println("Starting Application...") ;
+
     // Application storage setup
 
+    applicationStorage_.setup() ;
     applicationStorage_.load() ;
-
-    // Serial setup
-
-    Serial.begin(SERIAL_BAUD_RATE) ;
-    Serial.systemDebugOutput(true) ;
-
-    // set timezone hourly difference to UTC
-    // SystemClock.setTimeZone(2);
-
-    Serial.println("Starting...") ;
 
     // Status timer setup
 
@@ -69,6 +62,8 @@ void                            Application::start                          ( )
     if (!wifiManager_.isActive())
     {
 
+        Serial.println("Starting WiFi Manager...") ;
+
         wifiManager_.associateApplicationStorage(applicationStorage_) ;
 
         wifiManager_.setConnectionSuccessHandler(Delegate<void()>(&Application::onWifiConnectionSuccess, this)) ;
@@ -79,12 +74,18 @@ void                            Application::start                          ( )
 
         wifiManager_.start() ;
 
+        Serial.println("WiFi Manager has started.") ;
+
     }
+
+    Serial.println("Application has started.") ;
 
 }
 
 void                            Application::stop                           ( )
 {
+
+    Serial.println("Stopping Application...") ;
 
     if (taskManager_.isActive())
     {
@@ -106,17 +107,14 @@ void                            Application::stop                           ( )
         wifiManager_.stop() ;
     }
 
+    Serial.println("Application has stopped.") ;
+
 }
 
 void                            Application::onPrintStatus                  ( )
 {
 
-    if (!statusTimerEnabled_)
-    {
-        return ;
-    }
-
-    // Nothing to do!
+    Serial.printf("Current time: [%s].\n", Time::Now().toString().c_str()) ;
 
 }
 
@@ -193,11 +191,15 @@ totomiam::Application           application ;
 void                            init                                        ( )
 {
 
-    // System.setCpuFrequency(eCF_80MHz) ;
+    // Set up serial
 
-    // File system setup
+    Serial.begin(SERIAL_BAUD_RATE) ;
+    Serial.systemDebugOutput(true) ;
 
-    spiffs_mount() ;
+    // Change CPU frequency to 160 MHz
+
+	// System.setCpuFrequency(eCF_160MHz) ;
+	Serial.printf("CPU frequency set to [%d Hz].\n", (int)System.getCpuFrequency()) ;
 
     // Starting application
 

@@ -12,9 +12,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
-
+#include <TotoMiam/StepperMotor.hpp>
 #include <TotoMiam/Angle.hpp>
+
+#include <SmingCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,19 +33,8 @@ class StepperMotorController
 
     public:
 
-        enum class Mode
-        {
-
-            Forward,
-            Reverse,
-            Both
-
-        } ;
-
-                                StepperMotorController                      (   const   uint8_t&                    aFirstPin,
-                                                                                const   uint8_t&                    aSecondPin,
-                                                                                const   uint8_t&                    aThirdPin,
-                                                                                const   uint8_t&                    aFourthPin                                  ) ;
+                                StepperMotorController                      (   const   StepperMotor::Mode&         aMode,
+                                                                                const   StepperMotor::Pinout&       aPinout                                     ) ;
 
                                 ~StepperMotorController                     ( ) ;
 
@@ -55,26 +45,20 @@ class StepperMotorController
         double                  getOutputRadius                             ( ) const ;
         uint                    getStepsPerRotation                         ( ) const ;
 
-        uint8_t                 getPinA                                     ( ) const ;
-        uint8_t                 getPinB                                     ( ) const ;
-        uint8_t                 getPinC                                     ( ) const ;
-        uint8_t                 getPinD                                     ( ) const ;
+        StepperMotor::Mode      getMode                                     ( ) const ;
+        StepperMotor::Pinout    getPinout                                   ( ) const ;
 
         void                    rotate                                      (   const   Angle&                      anAngle                                     ) ;
 
     private:
-
-        uint8_t                 pin_A_ ;
-        uint8_t                 pin_B_ ;
-        uint8_t                 pin_C_ ;
-        uint8_t                 pin_D_ ;
 
         double                  inputRadius_ ;
         double                  outputRadius_ ;
 
         uint                    stepsPerRotation_ ;
 
-        StepperMotorController::Mode mode_ ;
+        StepperMotor::Mode      mode_ ;
+        StepperMotor::Pinout    pinout_ ;
 
 } ;
 

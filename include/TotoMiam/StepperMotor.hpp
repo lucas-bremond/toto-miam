@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// @project                    Toto|Miam
-/// @file                       TotoMiam/Version.hpp
+/// @file                       TotoMiam/StepperMotor.hpp
 /// @author                     Lucas Brémond <lucas.bremond@gmail.com>
 /// @license                    MIT License
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Version__
-#define __TotoMiam_Version__
+#ifndef __TotoMiam_StepperMotor__
+#define __TotoMiam_StepperMotor__
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,28 +21,28 @@ namespace totomiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Version
+namespace StepperMotor
 {
 
-    public:
+    enum class Mode
+    {
 
-        uint                    getMajor                                    ( ) const ;
-        uint                    getMinor                                    ( ) const ;
-        uint                    getPatch                                    ( ) const ;
+        Undefined,
+        Forward,
+        Reverse,
+        Both
 
-        String                  toString                                    ( ) const ;
+    } ;
 
-        static Version          Current                                     ( ) ;
+    struct Pinout
+    {
 
-    private:
+        uint8_t pin_A ;
+        uint8_t pin_B ;
+        uint8_t pin_C ;
+        uint8_t pin_D ;
 
-        uint                    major_ ;
-        uint                    minor_ ;
-        uint                    patch_ ;
-
-                                Version                                     (   const   uint                        aMajorNumber,
-                                                                                const   uint                        aMinorNumber,
-                                                                                const   uint                        aPatchNumber                                ) ;
+    } ;
 
 } ;
 

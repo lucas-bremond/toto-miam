@@ -83,7 +83,7 @@ void                            Task::execute                               ( )
 
         status_ = Task::Status::Executing ;
 
-        StepperMotorController stepperMotorController = { D0, D1, D2, D3 } ;
+        StepperMotorController stepperMotorController = { StepperMotor::Mode::Forward, { D0, D1, D2, D3 } } ;
 
         stepperMotorController.rotate(Angle::Degrees(-90.0)) ;
 

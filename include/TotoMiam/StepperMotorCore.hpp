@@ -12,9 +12,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
-
+#include <TotoMiam/StepperMotor.hpp>
 #include <TotoMiam/Angle.hpp>
+
+#include <HardwareTimer.h>
+#include <SmingCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +36,11 @@ class StepperMotorCore
 
                                 StepperMotorCore                            ( ) ;
 
+                                StepperMotorCore                            (   const   StepperMotorCore&           aStepperMotorCore                           ) = delete ;
+
         virtual                 ~StepperMotorCore                           ( ) ;
+
+        StepperMotorCore&       operator =                                  (   const   StepperMotorCore&           aStepperMotorCore                           ) = delete ;
 
         bool                    hasChannel                                  (           StepperMotorController&     aStepperMotorController                     ) const ;
         bool                    isChannelBusy                               (   const   StepperMotorController&     aStepperMotorController                     ) const ;
@@ -50,14 +56,9 @@ class StepperMotorCore
 
     private:
 
-        // struct Channel
-        // {
-
-        //     StepperMotorController* stepperMotorControllerPtr_ ;
-
-        // } ;
-
         Vector<StepperMotorController*> channels_ ;
+
+        HardwareTimer           hardwareTimer_ ;
 
 } ;
 

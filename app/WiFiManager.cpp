@@ -62,8 +62,12 @@ void                            WiFiManager::start                          ( )
         if ((applicationStoragePtr_ != nullptr) && applicationStoragePtr_->isDefined())
         {
 
-            ssid_ = applicationStoragePtr_->accessSSID() ;
-            password_ = applicationStoragePtr_->accessPassword() ;
+            ssid_ = applicationStoragePtr_->getSsid() ;
+            password_ = applicationStoragePtr_->getPassword() ;
+
+            Serial.println("SSID") ;
+            Serial.println(ssid_) ;
+            Serial.println(password_) ;
 
         }
 

@@ -126,6 +126,11 @@ void                            Rule::resetExecutionTime                    (   
 
 }
 
+Rule                            Rule::Undefined                             ( )
+{
+    return Rule() ;
+}
+
 Rule                            Rule::AtTime                                (   const   uint&                       anId,
                                                                                 const   CalendarDate&               aCalendarDate,
                                                                                 const   Duration&                   aTaskDuration                               )

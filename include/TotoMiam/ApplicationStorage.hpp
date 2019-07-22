@@ -12,7 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
+#include <SmingCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,9 +34,10 @@ class ApplicationStorage
 
         bool                    isDefined                                   ( ) ;
 
-        const String&           accessSSID                                  ( ) const ;
-        const String&           accessPassword                              ( ) const ;
+        String                  getSsid                                     ( ) const ;
+        String                  getPassword                                 ( ) const ;
 
+        void                    setup                                       ( ) ;
         void                    load                                        ( ) ;
         void                    save                                        ( ) ;
 
