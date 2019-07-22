@@ -1,16 +1,23 @@
+#!/usr/bin/env bash
+
 ################################################################################################################################################################
 
 # @project        Toto|Miam
-# @file           Makefile
+# @file           tools/development/helpers/build.sh
 # @author         Lucas Brémond <lucas.bremond@gmail.com>
 # @license        MIT License
 
 ################################################################################################################################################################
 
-ifndef SMING_HOME
-$(error SMING_HOME is not set: please configure it as an environment variable)
-endif
+script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+project_directory="${script_directory}/../../.."
 
-include $(SMING_HOME)/project.mk
+pushd "${project_directory}" > /dev/null
+
+numproc=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)
+
+make -j ${numproc}
+
+popd > /dev/null
 
 ################################################################################################################################################################

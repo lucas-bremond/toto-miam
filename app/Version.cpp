@@ -1,18 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// @project                    Toto|Miam
-/// @file                       TotoMiam/Version.hpp
+/// @file                       TotoMiam/Version.cpp
 /// @author                     Lucas Brémond <lucas.bremond@gmail.com>
 /// @license                    MIT License
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_Version__
-#define __TotoMiam_Version__
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#include <SmingCore.h>
+#include <TotoMiam/Version.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,37 +16,51 @@ namespace totomiam
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Version
+uint                            Version::getMajor                           ( ) const
+{
+    return major_ ;
+}
+
+uint                            Version::getMinor                           ( ) const
+{
+    return minor_ ;
+}
+
+uint                            Version::getPatch                           ( ) const
+{
+    return patch_ ;
+}
+
+String                          Version::toString                           ( ) const
 {
 
-    public:
+    char buffer[10] ;
 
-        uint                    getMajor                                    ( ) const ;
-        uint                    getMinor                                    ( ) const ;
-        uint                    getPatch                                    ( ) const ;
+    sprintf(buffer, "%d.%d.%d", major_, minor_, patch_) ;
 
-        String                  toString                                    ( ) const ;
+    return String(buffer) ;
 
-        static Version          Current                                     ( ) ;
+}
 
-    private:
-
-        uint                    major_ ;
-        uint                    minor_ ;
-        uint                    patch_ ;
-
-                                Version                                     (   const   uint                        aMajorNumber,
-                                                                                const   uint                        aMinorNumber,
-                                                                                const   uint                        aPatchNumber                                ) ;
-
-} ;
+Version                         Version::Current                            ( )
+{
+    return { 1, 2, 0 } ;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                Version::Version                            (   const   uint                        aMajorNumber,
+                                                                                const   uint                        aMinorNumber,
+                                                                                const   uint                        aPatchNumber                                )
+                                :   major_(aMajorNumber),
+                                    minor_(aMinorNumber),
+                                    patch_(aPatchNumber)
+{
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#endif
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

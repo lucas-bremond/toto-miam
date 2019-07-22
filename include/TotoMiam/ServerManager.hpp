@@ -1,79 +1,74 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file 						TotoMiam/ServerManager.hpp
-///	@author 					Lucas Bremond <lucas@axelspace.com>
-///	@date 						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/ServerManager.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_ServerManager_HPP_INCLUDED__
-#define __TotoMiam_ServerManager_HPP_INCLUDED__
+#ifndef __TotoMiam_ServerManager__
+#define __TotoMiam_ServerManager__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
+#include <SmingCore.h>
 
 #include <TotoMiam/TaskManager.hpp>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace TotoMiam
+namespace totomiam
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class ServerManager
 {
 
-	public:
+    public:
 
-								ServerManager 								( ) ;
+                                ServerManager                               (   const   uint                        aPort                                       =   80 ) ;
 
-		bool					isActive									( ) const ;
+        bool                    isActive                                    ( ) const ;
 
-		void					start										( ) ;
-		void					stop										( ) ;
+        void                    start                                       ( ) ;
+        void                    stop                                        ( ) ;
 
-		void					associateTaskManager						(			TaskManager&				aTaskManager						) ;
+        void                    associateTaskManager                        (       TaskManager&                    aTaskManager                                ) ;
 
-	private:
+    private:
 
-		uint					port_ ;
+        uint                    port_ ;
+        HttpServer*             serverPtr_ ;
+        TaskManager*            taskManagerPtr_ ;
 
-		HttpServer*				serverPtr_ ;
+        void                    onIndex                                     (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
-		TaskManager*			taskManagerPtr_ ;
+        void                    onFile                                      (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
-		void					onIndex										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
+        void                    onStatus                                    (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
-		void					onFile										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
+        void                    onTime                                      (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
-		void					onStatus									(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
+        void                    onRules                                     (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
-		void					onTime										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onRules										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
-
-		void					onTasks										(			HttpRequest&				aRequest,
-																						HttpResponse&				aResponse							) ;
+        void                    onTasks                                     (       HttpRequest&                    aRequest,
+                                                                                    HttpResponse&                   aResponse                                   ) ;
 
 } ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

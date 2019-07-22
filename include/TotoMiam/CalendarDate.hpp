@@ -1,101 +1,98 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///
-///	This file is part of the TotoMiam library.
-///
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///	@file						TotoMiam/CalendarDate.hpp
-///	@author						Lucas Bremond <lucas@axelspace.com>
-///	@date						9 Oct 2016
+/// @project                    Toto|Miam
+/// @file                       TotoMiam/CalendarDate.hpp
+/// @author                     Lucas Brémond <lucas.bremond@gmail.com>
+/// @license                    MIT License
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __TotoMiam_CalendarDate_HPP_INCLUDED__
-#define __TotoMiam_CalendarDate_HPP_INCLUDED__
+#ifndef __TotoMiam_CalendarDate__
+#define __TotoMiam_CalendarDate__
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SmingCore/SmingCore.h>
+#include <SmingCore.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace TotoMiam
+namespace totomiam
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Time ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class CalendarDate
 {
 
-	public:
+    public:
 
-		enum class Format
-		{
+        enum class Format
+        {
 
-			Undefined,
-			DateTime,
-			Date,
-			Time
+            Undefined,
+            DateTime,
+            Date,
+            Time
 
-		} ;
+        } ;
 
-								CalendarDate								( ) ;
+                                CalendarDate                                (   const   uint16_t&                   aYear,
+                                                                                const   uint8_t&                    aMonth,
+                                                                                const   uint8_t&                    aDay,
+                                                                                const   uint8_t&                    anHourCount,
+                                                                                const   uint8_t&                    aMinuteCount,
+                                                                                const   uint8_t&                    aSecondCount                                ) ;
 
-								CalendarDate								(	const	int16_t&					aYear,
-																				const	int8_t&						aMonth,
-																				const	int8_t&						aDay,
-																				const	int8_t&						anHourCount,
-																				const	int8_t&						aMinuteCount,
-																				const	int8_t&						aSecondCount						) ;
+        bool                    operator ==                                 (   const   CalendarDate&               aCalendarDate                               ) const ;
+        bool                    operator !=                                 (   const   CalendarDate&               aCalendarDate                               ) const ;
 
-		bool					operator ==									(	const	CalendarDate&				aCalendarDate						) const ;
-		bool					operator !=									(	const	CalendarDate&				aCalendarDate						) const ;
+        bool                    isDefined                                   ( ) const ;
 
-		bool					isDefined									( ) const ;
+        uint16_t                getYear                                     ( ) const ;
+        uint8_t                 getMonth                                    ( ) const ;
+        uint8_t                 getDay                                      ( ) const ;
+        uint8_t                 getHours                                    ( ) const ;
+        uint8_t                 getMinutes                                  ( ) const ;
+        uint8_t                 getSeconds                                  ( ) const ;
 
-		int16_t					getYear										( ) const ;
-		int8_t					getMonth									( ) const ;
-		int8_t					getDay										( ) const ;
-		int8_t					getHours									( ) const ;
-		int8_t					getMinutes									( ) const ;
-		int8_t					getSeconds									( ) const ;
+        String                  toString                                    (   const   CalendarDate::Format&       aFormat                                     =        CalendarDate::Format::DateTime ) const ;
 
-		String					getString									(	const	CalendarDate::Format&		aFormat								=		CalendarDate::Format::DateTime ) const ;
+        void                    setYear                                     (   const   uint16_t&                   aYearCount                                  ) ;
+        void                    setMonth                                    (   const   uint8_t&                    aMonthCount                                 ) ;
+        void                    setDay                                      (   const   uint8_t&                    aDayCount                                   ) ;
+        void                    setHours                                    (   const   uint8_t&                    aHourCount                                  ) ;
+        void                    setMinutes                                  (   const   uint8_t&                    aMinuteCount                                ) ;
+        void                    setSeconds                                  (   const   uint8_t&                    aSecondCount                                ) ;
 
-		void					setYear										(	const	int16_t&					aYearCount							) ;
-		void					setMonth									(	const	int8_t&						aMonthCount							) ;
-		void					setDay										(	const	int8_t&						aDayCount							) ;
-		void					setHours									(	const	int8_t&						aHourCount							) ;
-		void					setMinutes									(	const	int8_t&						aMinuteCount						) ;
-		void					setSeconds									(	const	int8_t&						aSecondCount						) ;
+        static CalendarDate     Undefined                                   ( ) ;
 
-		static CalendarDate		Undefined									( ) ;
+        static CalendarDate     Time                                        (   const   totomiam::Time&             aTime                                       ) ;
 
-		static CalendarDate		Time										(	const	TotoMiam::Time&				aTime								) ;
+        static CalendarDate     Parse                                       (   const   String&                     aString                                     ) ;
 
-		static CalendarDate		Parse										(	const	String&						aString								) ;
+    private:
 
-	private:
+        uint16_t                year_ ;
+        uint8_t                 month_ ;
+        uint8_t                 day_ ;
+        uint8_t                 hours_ ;
+        uint8_t                 minutes_ ;
+        uint8_t                 seconds_ ;
 
-		int16_t					year_ ;
-		int8_t					month_ ;
-		int8_t					day_ ;
-		int8_t					hours_ ;
-		int8_t					minutes_ ;
-		int8_t					seconds_ ;
+                                CalendarDate                                ( ) ;
 
 } ;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

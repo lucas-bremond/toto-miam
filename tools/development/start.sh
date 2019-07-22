@@ -1,16 +1,34 @@
+#!/usr/bin/env bash
+
 ################################################################################################################################################################
 
 # @project        Toto|Miam
-# @file           Makefile
+# @file           tools/development/start.sh
 # @author         Lucas Brémond <lucas.bremond@gmail.com>
 # @license        MIT License
 
 ################################################################################################################################################################
 
-ifndef SMING_HOME
-$(error SMING_HOME is not set: please configure it as an environment variable)
-endif
+script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-include $(SMING_HOME)/project.mk
+pushd "${script_directory}" > /dev/null
+
+# Load environment
+
+source ".env"
+
+# Start development environment
+
+docker run \
+--name=${container_name} \
+-it \
+--privileged \
+--rm \
+--volume="${project_directory}:/app" \
+--device="${usb_device}:/dev/ttyUSB0" \
+--workdir="/app/tools/development/helpers" \
+"${image_name}:${image_version}"
+
+popd > /dev/null
 
 ################################################################################################################################################################

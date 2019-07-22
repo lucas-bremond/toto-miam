@@ -1,16 +1,26 @@
+#!/usr/bin/env bash
+
 ################################################################################################################################################################
 
 # @project        Toto|Miam
-# @file           Makefile
+# @file           tools/development/helpers/term.sh
 # @author         Lucas Brémond <lucas.bremond@gmail.com>
 # @license        MIT License
 
 ################################################################################################################################################################
 
-ifndef SMING_HOME
-$(error SMING_HOME is not set: please configure it as an environment variable)
-endif
+script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+project_directory="${script_directory}/../../.."
 
-include $(SMING_HOME)/project.mk
+pushd "${project_directory}" > /dev/null
+
+# screen /dev/ttyUSB0 74880 # Exit: Ctrl-a Ctrl-\
+# screen /dev/ttyUSB0 115200 # Exit: Ctrl-a Ctrl-\
+
+# python -m serial.tools.miniterm /dev/ttyUSB0 74880
+# python -m serial.tools.miniterm --raw --encoding ascii /dev/ttyUSB0 74880
+python -m serial.tools.miniterm --raw --encoding ascii /dev/ttyUSB0 115200
+
+popd > /dev/null
 
 ################################################################################################################################################################
